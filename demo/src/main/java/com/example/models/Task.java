@@ -1,26 +1,28 @@
 package com.example.models;
 
-import java.util.Objects;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 @Entity
 public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private int duration;
+    private int focusDuration;
+    private int breakDuration;
+    private int totalDuration;
 
     public Task() {
         // Default constructor required for JPA
     }
 
-    public Task(String name, int duration) {
+    public Task(String name, int focusDuration, int breakDuration) {
         this.name = name;
-        this.duration = duration;
+        this.focusDuration = focusDuration;
+        this.breakDuration = breakDuration;
+        this.totalDuration = 0;
     }
 
     // Getters and setters
@@ -40,11 +42,28 @@ public class Task {
         this.name = name;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getFocusDuration() {
+        return focusDuration;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setFocusDuration(int focusDuration) {
+        this.focusDuration = focusDuration;
+    }
+
+    public int getBreakDuration() {
+        return breakDuration;
+    }
+
+    public void setBreakDuration(int breakDuration) {
+        this.breakDuration = breakDuration;
+    }
+
+    public int getTotalDuration() {
+        return totalDuration;
+    }
+
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
     }
 }
+
