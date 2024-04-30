@@ -21,7 +21,7 @@ public class PomodoroController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
-        return "pomodoro";
+        return "user/pomodoro";
     }
 
     @PostMapping("/tasks")
