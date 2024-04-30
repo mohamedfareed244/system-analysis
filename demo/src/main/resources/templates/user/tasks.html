@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+  content="width=device-width, height=device-height,  initial-scale=1.0, "
+/>
+   
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Tasks</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.id}"></td>
+                <td th:text="${task.name}"></td>
+                <td>
+                    <a th:href="@{/tasks/{id}(id=${task.id})}">Details</a>
+                    <a th:href="@{/tasks/{id}/start(id=${task.id})}">Start Timer</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/tasks/create">Create New Task</a>
+</body>
+</html>

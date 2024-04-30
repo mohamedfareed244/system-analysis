@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class PomodoroController {
-    private final taskRepository taskRepository;
+    // private final taskRepository taskRepository;
 
-    @Autowired
-    public PomodoroController(taskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+    // @Autowired
+    // public PomodoroController(taskRepository taskRepository) {
+    //     this.taskRepository = taskRepository;
+    // }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("tasks", taskRepository.findAll());
-        return "user/pomodoro";
-    }
+    // @GetMapping("/")
+    // public String index(Model model) {
+    //     model.addAttribute("tasks", taskRepository.findAll());
+    //     return "user/pomodoro";
+    // }
 
-    @PostMapping("/tasks")
-    public String addTask(@ModelAttribute Task task) {
-        taskRepository.save(task);
-        return "redirect:/";
-    }
+    // @PostMapping("/tasks")
+    // public String addTask(@ModelAttribute Task task) {
+    //     taskRepository.save(task);
+    //     return "redirect:/";
+    // }
 }
