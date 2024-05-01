@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.models.Task;
 
 @Repository
-public interface taskRepository extends JpaRepository<Task, String> {
+public interface taskRepository extends JpaRepository<Task, Long> {
 
     // Optional<Task> findByName(String name);
 
