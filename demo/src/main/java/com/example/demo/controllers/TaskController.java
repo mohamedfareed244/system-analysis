@@ -1,7 +1,7 @@
-package com.example.controllers;
+package com.example.demo.controllers;
 
-import com.example.models.Task;
-import com.example.Repositories.taskRepository;
+import com.example.demo.Repositories.taskRepository;
+import com.example.demo.models.Task;
 
 import java.util.List;
 
