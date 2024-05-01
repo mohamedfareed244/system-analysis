@@ -20,7 +20,7 @@ public class TaskController {
     @GetMapping
     public String getAllTasks(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
-        return "tasks";
+        return "user/tasks";
     }
 
     @GetMapping("/{id}")
@@ -28,13 +28,13 @@ public class TaskController {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
         model.addAttribute("task", task);
-        return "task-details";
+        return "user/taskDetails";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("task", new Task());
-        return "create-task";
+        return "user/createTask";
     }
 
     @PostMapping("/create")
@@ -44,11 +44,37 @@ public class TaskController {
     }
 
     @GetMapping("/{id}/start")
-    public String startTimer(@PathVariable Long id) {
+    public String startTimer(@PathVariable Long id, Model model) {
+        Task task = taskRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
+
+        model.addAttribute("task", task);
+        return "user/startTimer";
+    }
+
+    @GetMapping("/{id}/start-focus")
+    public String startFocusTimer(@PathVariable Long id, Model model) {
+        Task task = taskRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
+
+        task.startTimer();
+        task.setTotalDuration(task.getTotalDuration() + task.getFocusDuration());
+        taskRepository.save(task);
+
+        model.addAttribute("task", task);
+        return "user/startBreakTimer";
+    }
+
+    @GetMapping("/{id}/start-break")
+    public String startBreakTimer(@PathVariable Long id, Model model) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
-        task.startTimer();
+
+        task.startBreakTimer();
+        task.setTotalDuration(task.getTotalDuration() + task.getBreakDuration());
         taskRepository.save(task);
-        return "redirect:/tasks";
+
+        model.addAttribute("task", task);
+        return "taskDetails";
     }
 }

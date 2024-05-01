@@ -67,31 +67,19 @@ public class Task {
     }
 
     public void startTimer() {
-        System.out.println("Starting Pomodoro timer for task: " + name);
-        System.out.println("Focus for " + focusDuration + " minutes...");
-
-        // Simulate the focus period
         try {
             Thread.sleep(focusDuration * 1000 * 60); // Convert minutes to milliseconds
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
-        totalDuration += focusDuration; // Update the total duration
-
-        System.out.println("Break for " + breakDuration + " minutes...");
-
-        // Simulate the break period
+    public void startBreakTimer() {
         try {
             Thread.sleep(breakDuration * 1000 * 60); // Convert minutes to milliseconds
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        totalDuration += breakDuration; // Update the total duration
-
-        System.out.println("Pomodoro completed for task: " + name);
-        System.out.println("Total duration spent: " + totalDuration + " minutes");
     }
 }
 

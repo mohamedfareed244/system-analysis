@@ -24,11 +24,44 @@
                 <td th:text="${task.name}"></td>
                 <td>
                     <a th:href="@{/tasks/{id}(id=${task.id})}">Details</a>
-                    <a th:href="@{/tasks/{id}/start(id=${task.id})}">Start Timer</a>
+                    
+                    <button onclick="startTimer('${task.id}', '${task.focusDuration}', '${task.breakDuration}')">Start Timer</button>
+                    <div id="timer"></div>
                 </td>
             </tr>
         </tbody>
     </table>
     <a href="/tasks/create">Create New Task</a>
+
+    <!-- <script>
+        function startTimer(taskId, focusDuration, breakDuration) {
+             focusDuration = parseInt('${task.focusDuration}');
+ breakDuration = parseInt('${task.breakDuration}');
+    var timerElement = document.getElementById('timer');
+    timerElement.innerHTML = formatTime(focusDuration);
+
+    var focusEndTime = new Date();
+    focusEndTime.setSeconds(focusEndTime.getSeconds() + focusDuration);
+
+    var timerInterval = setInterval(function() {
+        var now = new Date();
+        var remainingTime = Math.max(0, focusEndTime - now);
+
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerElement.innerHTML = formatTime(breakDuration);
+            return;
+        }
+
+        timerElement.innerHTML = formatTime(remainingTime);
+    }, 1000);
+}
+
+function formatTime(timeInSeconds) {
+    var minutes = Math.floor(timeInSeconds / 60);
+    var seconds = Math.floor(timeInSeconds % 60);
+    return minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+} -->
+    </script>
 </body>
 </html>
