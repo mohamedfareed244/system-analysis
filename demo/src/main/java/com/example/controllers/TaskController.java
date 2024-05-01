@@ -2,10 +2,14 @@ package com.example.controllers;
 
 import com.example.models.Task;
 import com.example.Repositories.taskRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/tasks")
@@ -22,7 +26,14 @@ public class TaskController {
         model.addAttribute("tasks", taskRepository.findAll());
         return "user/tasks";
     }
+//    @GetMapping("/tasks")
+// public ModelAndView getTasks() {
+//     List<Task> tasks = taskRepository.findAll();
+//      ModelAndView modelAndView = new ModelAndView("tasks");
+//     modelAndView.addObject("tasks", tasks);
 
+//     return modelAndView;
+// }
     @GetMapping("/{id}")
     public String getTaskById(@PathVariable Long id, Model model) {
         Task task = taskRepository.findById(id)
@@ -46,23 +57,22 @@ public class TaskController {
     @GetMapping("/{id}/start")
     public String startTimer(@PathVariable Long id, Model model) {
         Task task = taskRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
-
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
+    
         model.addAttribute("task", task);
-        return "user/startTimer";
+        return "user/tasks";
     }
-
     @GetMapping("/{id}/start-focus")
-    public String startFocusTimer(@PathVariable Long id, Model model) {
+    public String startFocusTimer(@PathVariable Long id, Model model, @RequestParam("duration") int duration) {
         Task task = taskRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
-
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + id));
+    
         task.startTimer();
-        task.setTotalDuration(task.getTotalDuration() + task.getFocusDuration());
+        task.setTotalDuration(task.getTotalDuration() + duration);
         taskRepository.save(task);
-
+    
         model.addAttribute("task", task);
-        return "user/startBreakTimer";
+        return "user/tasks"; // Adjust the view name to match your template
     }
 
     @GetMapping("/{id}/start-break")
@@ -75,6 +85,6 @@ public class TaskController {
         taskRepository.save(task);
 
         model.addAttribute("task", task);
-        return "taskDetails";
+        return "user/tasks";
     }
 }

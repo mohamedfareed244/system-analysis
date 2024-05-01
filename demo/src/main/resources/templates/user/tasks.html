@@ -25,7 +25,8 @@
                 <td>
                     <a th:href="@{/tasks/{id}(id=${task.id})}">Details</a>
                     
-                    <button onclick="startTimer('${task.id}', '${task.focusDuration}', '${task.breakDuration}')">Start Timer</button>
+                    <button onclick="startTimer(this)" data-taskId="${task.id}" data-focusDuration="${task.focusDuration}" data-breakDuration="${task.breakDuration}">Start Timer</button>
+                    <button onclick="stopTimer()">Stop Timer</button>
                     <div id="timer"></div>
                 </td>
             </tr>
@@ -33,35 +34,76 @@
     </table>
     <a href="/tasks/create">Create New Task</a>
 
-    <!-- <script>
-        function startTimer(taskId, focusDuration, breakDuration) {
-             focusDuration = parseInt('${task.focusDuration}');
- breakDuration = parseInt('${task.breakDuration}');
-    var timerElement = document.getElementById('timer');
-    timerElement.innerHTML = formatTime(focusDuration);
+    <script th:inline="javascript">
+        var tasks = /*[[${tasks}]]*/ [];
+        var timerInterval;
+    
+        function startTimer(button) {
+            var taskId = button.getAttribute('data-taskId');
+    var task = tasks.find(function(t) {
+        return t.id === taskId;
+    });
 
-    var focusEndTime = new Date();
-    focusEndTime.setSeconds(focusEndTime.getSeconds() + focusDuration);
+    var focusDuration = task.focusDuration;
 
-    var timerInterval = setInterval(function() {
-        var now = new Date();
-        var remainingTime = Math.max(0, focusEndTime - now);
+    // Make an AJAX request to the start-focus endpoint
+    fetch('/tasks/' + taskId + '/start-focus?duration=' + focusDuration)
+        .then(function(response) {
+            if (response.ok) {
+                // Start timer logic
+                var focusEndTime = new Date();
+                focusEndTime.setSeconds(focusEndTime.getSeconds() + focusDuration);
 
-        if (remainingTime <= 0) {
-            clearInterval(timerInterval);
-            timerElement.innerHTML = formatTime(breakDuration);
-            return;
-        }
+                timerInterval = setInterval(function() {
+                    var now = new Date();
+                    var remainingTime = Math.max(0, focusEndTime - now);
 
-        timerElement.innerHTML = formatTime(remainingTime);
-    }, 1000);
+                    if (remainingTime <= 0) {
+                        clearInterval(timerInterval);
+                        startBreakTimer(taskId, task.breakDuration);
+                        return;
+                    }
+
+                    var timerElement = document.getElementById('timer');
+                    timerElement.innerHTML = formatTime(remainingTime);
+                }, 1000);
+            } else {
+                console.log('Error starting timer');
+            }
+        })
+        .catch(function(error) {
+            console.log('Error starting timer:', error);
+        });
 }
-
-function formatTime(timeInSeconds) {
-    var minutes = Math.floor(timeInSeconds / 60);
-    var seconds = Math.floor(timeInSeconds % 60);
-    return minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
-} -->
+    
+        function startBreakTimer(taskId, breakDuration) {
+            var breakEndTime = new Date();
+            breakEndTime.setSeconds(breakEndTime.getSeconds() + breakDuration);
+    
+            timerInterval = setInterval(function() {
+                var now = new Date();
+                var remainingTime = Math.max(0, breakEndTime - now);
+    
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    // Timer finished, do something
+                    return;
+                }
+    
+                var timerElement = document.getElementById('timer');
+                timerElement.innerHTML = formatTime(remainingTime);
+            }, 1000);
+        }
+    
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+    
+        function formatTime(timeInSeconds) {
+            var minutes = Math.floor(timeInSeconds / 60);
+            var seconds = Math.floor(timeInSeconds % 60);
+            return minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+        }
     </script>
 </body>
 </html>
