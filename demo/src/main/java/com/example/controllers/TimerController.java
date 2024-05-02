@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,10 +32,11 @@ public class TimerController {
         this.timerServiceRepository = timerServiceRepository;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("task", taskRepository.findAll());
-        return "login";
+    
+    @GetMapping("")
+    public ModelAndView getData() {
+        ModelAndView mav = new ModelAndView("landing");
+        return mav;
     }
 
     @PostMapping("/login")
