@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, height=device-height,  initial-scale=1.0, "
+  />
+    <title>Timer Page</title>
+</head>
+<body>
+<h1>Timer</h1>
+
+<!-- <div th:if="${timerService.isRunning}">
+    <p>Time remaining: <span th:text="${timerService.startTimer(timerService.focusDuration , timerService.breakDuration)}"></span></p>
+    <form action="/timer/stop" method="post">
+        <button type="submit">Stop Timer</button>
+    </form>
+</div>
+
+<div th:unless="${timerService.isRunning}">
+    <form action="/timer/start" method="post">
+        <label >Focus Duration (minutes):</label>
+        <input type="number" id="focusDuration" th:value="${timerService.focusDuration}" name="focusDuration" required title="input">
+        <br>
+        <label >Break Duration (minutes):</label>
+        <input type="number" id="focusDuration" th:value="${timerService.breakDuration}" name="breakDuration" required title="input">
+        <br>
+        <button type="submit">Start Timer</button>
+    </form>
+</div> -->
+<div id="timer">
+    <span id="timer-label">Focus</span>
+    <span id="timer-time">25:00</span>
+    <button id="start-timer">Start</button>
+    <button id="stop-timer">Stop</button>
+
+</div>
+<div>
+    <h2>Tasks</h2>
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.description}"></td>
+            <td>
+                <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
+                    <input type="text" name="description" th:value="${task.description}" required title="input">
+                    <button type="submit">Edit</button>
+                </form>
+                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <h3>Add Task</h3>
+    <form action="/timer/addTask" method="post">
+        <input type="text" name="description" required title="input">
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+
+<script>
+    var timerInterval;
+
+    function startTimer() {
+        var timerTime = document.getElementById("timer-time");
+        var time = timerTime.innerHTML.split(":");
+        var minutes = parseInt(time[0]);
+        var seconds = parseInt(time[1]);
+
+        timerInterval = setInterval(function() {
+            if (seconds === 0) {
+                if (minutes === 0) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+
+            timerTime.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                (seconds < 10 ? "0" + seconds : seconds);
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    var startButton = document.getElementById("start-timer");
+    startButton.addEventListener("click", startTimer);
+
+    var stopButton = document.getElementById("stop-timer");
+    stopButton.addEventListener("click", stopTimer);
+</script>
+
+</body>
+</html>
