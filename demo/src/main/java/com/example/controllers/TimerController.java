@@ -5,9 +5,15 @@ import com.example.models.TimerService;
 import com.example.models.User;
 import com.example.repositories.TaskRepository;
 import com.example.repositories.UserRepository;
+
+import jakarta.validation.Valid;
+
 import com.example.repositories.TimerServiceRepository;
+
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -114,6 +120,27 @@ public class TimerController {
     //     taskRepository.updateTask(taskId, updatedTask);
     //     return "redirect:/timer";
     // }
+@GetMapping("/timer/{id}/editTask")
+    public String showEditAdminForm(@PathVariable("id") Long id, Model model) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid admin ID: " + id));
+        model.addAttribute("task", task);
+        return "redirect:/timer";
+    }
+
+    @PostMapping("/timer/{id}/editTask")
+    public String updateAdmin(@Valid @PathVariable("id") Long id, @ModelAttribute("task") Task updatedTask,
+            BindingResult bindingResult) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid admin ID: " + id));
+        task.setDescription(updatedTask.getDescription());
+        if (bindingResult.hasErrors()) {
+            return "redirect:/timer";
+        } else {
+            taskRepository.save(task);
+            return "redirect:/timer";
+        }
+    }
 
     @PostMapping("/timer/deleteTask/{taskId}")
     public String deleteTask(@PathVariable("taskId") Long taskId) {
