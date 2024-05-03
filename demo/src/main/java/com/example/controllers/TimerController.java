@@ -10,6 +10,7 @@ import com.example.repositories.TimerServiceRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,7 +85,7 @@ public class TimerController {
             session.setAttribute("user", user);
             return "redirect:/timer";
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/timer")
@@ -92,15 +93,16 @@ public class TimerController {
         User user = (User) session.getAttribute("user");
         if (user == null) {
            
-            return "redirect:/"; 
+            return "redirect:/login"; 
         }
-    
+    else{
         List<Task> tasks = taskRepository.findByUser(user);
         model.addAttribute("tasks", tasks);
         TimerService timerService = new TimerService();
         model.addAttribute("timerService", timerService);
     
         return "timer";
+    }
     }
 
     @PostMapping("/timer/start")
@@ -170,5 +172,14 @@ public class TimerController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
         taskRepository.delete(task);
         return "redirect:/timer";
+    }
+   
+    @PostMapping("/timer/finishTask/{taskId}")
+    public ResponseEntity<String> finishTask(@PathVariable("taskId") Long taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+        task.setFinished(true);
+        taskRepository.save(task);
+        return ResponseEntity.ok("Task finished successfully.");
     }
 }

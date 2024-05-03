@@ -20,9 +20,20 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+    private Boolean finished;
        @ManyToOne
     private User user;
+  
 
+   
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
     // Getters and setters
 
     public User getUser() {

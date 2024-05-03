@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -15,7 +15,7 @@
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="/demo/src/main/resources/assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
 
   <!-- 
     - google font link
@@ -23,6 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
 </head>
 
 <body id="top">
@@ -71,7 +72,7 @@
 
           </ul>
 
-          <button class="btn btn-primary">Sign Up</button>
+          <a class="btn btn-primary" th:href="@{/signup}" >Sign Up</a>
 
         </nav>
 
@@ -199,7 +200,7 @@
 
               </p>
 
-              <button class="btn btn-secondary">Sign Up For Free</button>
+              <a class="btn btn-secondary" th:href="@{/signup}">Sign Up For Free</a>
 
             </div>
 
@@ -274,7 +275,7 @@
 
           <div class="cta-card">
 
-            <h3 class="cta-title">Try it for free</h3>
+            <a class="cta-title" th:href="@{/signup}">Try it for free</a>
 
            
 
@@ -367,7 +368,7 @@
 
           <p class="footer-text">Follow us on</p>
 
-          <ul class="social-list">
+          <!-- <ul class="social-list">
 
 
             <li>
@@ -388,7 +389,7 @@
               </a>
             </li>
 
-          </ul>
+          </ul> -->
 
         </div>
 

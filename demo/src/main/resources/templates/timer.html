@@ -8,60 +8,55 @@
     <title>Timer Page</title>
 </head>
 <body>
-<h1>Timer</h1>
+    <h1>Timer</h1>
 
-<!-- <div th:if="${timerService.isRunning}">
-    <p>Time remaining: <span th:text="${timerService.startTimer(timerService.focusDuration , timerService.breakDuration)}"></span></p>
-    <form action="/timer/stop" method="post">
-        <button type="submit">Stop Timer</button>
-    </form>
-</div>
-
-<div th:unless="${timerService.isRunning}">
-    <form action="/timer/start" method="post">
-        <label >Focus Duration (minutes):</label>
-        <input type="number" id="focusDuration" th:value="${timerService.focusDuration}" name="focusDuration" required title="input">
-        <br>
-        <label >Break Duration (minutes):</label>
-        <input type="number" id="focusDuration" th:value="${timerService.breakDuration}" name="breakDuration" required title="input">
-        <br>
-        <button type="submit">Start Timer</button>
-    </form>
-</div> -->
-<div id="timer">
-    <span id="timer-label">Focus</span>
-    <span id="timer-time">25:00</span>
-    <button id="start-timer">Start</button>
-    <button id="stop-timer">Stop</button>
-
-</div>
-<div>
-    <h2>Tasks</h2>
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Actions</th>
-        </tr>
-        <tr th:each="tasks: ${tasks}">
-            <td th:text="${tasks.description}"></td>
-            <td>
-                <form th:action="@{/timer/editTask/{taskId}(taskId=${tasks.id})}" method="post">
-                    <input type="text" name="description" th:value="${tasks.description}" required title="input">
-                    <button type="submit">Edit</button>
-                </form>
-                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${tasks.id})}" method="post">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </table>
-    <h3>Add Task</h3>
-    <form action="/timer/addTask" method="post">
-        <input type="text" name="description" required title="input">
-        <button type="submit">Add Task</button>
-    </form>
-</div>
-
+    <div id="timer">
+        <span id="timer-label">Focus</span>
+        <span id="timer-time">25:00</span>
+        <button id="start-timer">Start</button>
+        <button id="stop-timer">Stop</button>
+    </div>
+    
+    <div>
+        <h2>Tasks</h2>
+        <table>
+            <tr>
+                <th>Task</th>
+                <th>Actions</th>
+            </tr>
+            <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
+                <td th:text="${task.description}"></td>
+                <td>
+                    <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
+                        <input type="text" name="description" th:value="${task.description}" required title="input">
+                        <button type="submit">Edit</button>
+                    </form>
+                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post">
+                        <button type="submit" class="finish-button" data-task-id="${task.id}">Finish</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        
+        <h3>Add Task</h3>
+        <form action="/timer/addTask" method="post">
+            <input type="text" name="description" required title="input">
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+    
+    <div>
+        <h2>Finished Tasks</h2>
+        <table>
+            
+            <tr id="finished-task-section"></tr>
+          
+          
+        </table>
+    </div>
 <script>
     var timerInterval;
 
@@ -97,6 +92,42 @@
 
     var stopButton = document.getElementById("stop-timer");
     stopButton.addEventListener("click", stopTimer);
+
+    function finishTask(taskId) {
+    const taskRow = document.getElementById('task-' + taskId);
+    const finishedTaskSection = document.getElementById('finished-task-section');
+    finishedTaskSection.appendChild(taskRow);
+
+    const finishButton = taskRow.querySelector('.finish-button');
+    finishButton.remove();
+
+    fetch('/timer/finishTask/' + taskId, {
+        method: 'POST'
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('Failed to finish task: ' + response.status);
+        }
+    })
+    .catch(error => {
+        console.error('Error finishing task:', error);
+    });
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var finishButtons = document.getElementsByClassName('finish-button');
+    for (var i = 0; i < finishButtons.length; i++) {
+        finishButtons[i].addEventListener('click', function(event) {
+            var taskId = event.target.getAttribute('data-task-id');
+            finishTask(taskId);
+        });
+    }
+});
+}
+    
 </script>
 
 </body>
