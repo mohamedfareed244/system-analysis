@@ -76,11 +76,7 @@ public class TimerController {
      
         return "redirect:/timer";
     }
-    @GetMapping("/login")
-    public String index(Model model) {
-        model.addAttribute("tasks", taskRepository.findAll());
-        return "login";
-    }
+
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
         User user = userRepository.findByUsername(username);
