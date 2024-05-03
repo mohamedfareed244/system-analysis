@@ -36,11 +36,11 @@ public class TimerController {
         ModelAndView mav = new ModelAndView("landing");
         return mav;
     }
-    // @GetMapping("/login")
-    // public String index (Model model) {
-    //     model.addAttribute("tasks", taskRepository.findAll());
-    //     return "login";
-    // }
+    @GetMapping("/login")
+    public String index (Model model) {
+        model.addAttribute("tasks", taskRepository.findAll());
+        return "login";
+    }
     // @PostMapping("/login")
     // public String login(@RequestParam String username, @RequestParam String password) {
     //     User user = userRepository.findByUsername(username);
