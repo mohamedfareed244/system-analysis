@@ -6,24 +6,37 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User {
+public class User  implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Task> tasks;
+
+    // public User() {
+    //     tasks = new ArrayList<>();
+    // }
+    @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
-    public User() {
-        tasks = new ArrayList<>();
+    // Getters and setters
+    
+    public List<Task> getTasks() {
+        
+        return tasks;
     }
 
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
     // Setters and Getters
     public Long getId() {
         return id;
@@ -49,13 +62,13 @@ public class User {
         this.password = password;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
+    // public List<Task> getTasks() {
+    //     return tasks;
+    // }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+    // public void setTasks(List<Task> tasks) {
+    //     this.tasks = tasks;
+    // }
 
     public static User signUp(String username2, String password2) {
         // TODO Auto-generated method stub

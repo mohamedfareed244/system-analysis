@@ -42,14 +42,14 @@
             <th>Task</th>
             <th>Actions</th>
         </tr>
-        <tr th:each="task : ${tasks}">
-            <td th:text="${task.description}"></td>
+        <tr th:each="tasks: ${tasks}">
+            <td th:text="${tasks.description}"></td>
             <td>
-                <form th:action="@{/timer/{id}/editTask(id=${task.id})}" method="post">
-                    <input type="text" name="description" th:value="${task.description}" required title="input">
+                <form th:action="@{/timer/editTask/{taskId}(taskId=${tasks.id})}" method="post">
+                    <input type="text" name="description" th:value="${tasks.description}" required title="input">
                     <button type="submit">Edit</button>
                 </form>
-                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${tasks.id})}" method="post">
                     <button type="submit">Delete</button>
                 </form>
             </td>
