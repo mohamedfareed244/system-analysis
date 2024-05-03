@@ -30,10 +30,20 @@ public class TimerController {
         this.timerServiceRepository = timerServiceRepository;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("tasks", taskRepository.findAll());
-        return "login";
+    
+    @GetMapping("")
+    public ModelAndView getData() {
+        ModelAndView mav = new ModelAndView("landing");
+        return mav;
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String username, @RequestParam String password) {
+        User user = userRepository.findByUsername(username);
+        if (user != null && user.getPassword().equals(password)) {
+            return "redirect:/timer";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/signup")
@@ -62,7 +72,11 @@ public class TimerController {
      
         return "redirect:/timer";
     }
-
+    @GetMapping("/login")
+    public String index(Model model) {
+        model.addAttribute("tasks", taskRepository.findAll());
+        return "login";
+    }
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
         User user = userRepository.findByUsername(username);

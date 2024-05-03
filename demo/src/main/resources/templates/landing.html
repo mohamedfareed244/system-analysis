@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Funel - Agancy landing page</title>
+  <title>Mandala</title>
 
   <!-- 
     - favicon link
@@ -15,28 +15,27 @@
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="/demo/src/main/resources/assets/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 
   <!-- 
     - google font link
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js"></script>
+
 </head>
 
 <body id="top">
 
-  <!-- 
-    - #HEADER
-  -->
 
   <header>
 
     <div class="container">
 
       <a href="#" class="logo">
-        <img src="./assets/images/logo.png" alt="Funel logo">
+        <img src="/images/logo.png" alt="Funel logo">
       </a>
 
       <div class="navbar-wrapper">
@@ -82,9 +81,6 @@
   </header>
 
 
-
-
-
   <main>
 
     <article>
@@ -112,7 +108,7 @@
 
         </div>
 
-        <img src="./assets/images/bg.png" alt="shape" class="shape-content">
+        <img src="/images/bg.png" alt="shape" class="shape-content">
       </section>
 
 
@@ -186,7 +182,7 @@
           <div class="about-bottom">
 
             <figure class="about-bottom-banner">
-              <img src="./assets/images/about-banner.png" alt="about banner" class="about-banner">
+              <img src="/images/about-banner.png" alt="about banner" class="about-banner">
             </figure>
 
             <div class="about-bottom-content">
@@ -208,11 +204,7 @@
         </div>
       </section>
 
-
-
-
-
-      <!-- 
+            <!-- 
         - #FEATURES
       -->
 
@@ -227,7 +219,7 @@
             <li class="features-item">
 
               <figure class="features-item-banner">
-                <img src="./assets/images/feature-1.png" alt="feature banner">
+                <img src="/images/feature-1.png" alt="feature banner">
               </figure>
 
               <div class="feature-item-content">
@@ -243,7 +235,7 @@
             <li class="features-item">
 
               <figure class="features-item-banner">
-                <img src="./assets/images/feature-2.png" alt="feature banner">
+                <img src="/images/feature-2.png" alt="feature banner">
               </figure>
 
               <div class="feature-item-content">
@@ -261,11 +253,7 @@
         </div>
       </section>
 
-
-
-
-
-      <!-- 
+         <!-- 
         - #CTA
       -->
 
@@ -288,11 +276,6 @@
 
         </div>
       </section>
-
-
-
-
-
       <!-- 
         - #CONTACT
       -->
@@ -304,7 +287,7 @@
             <h2 class="h2 contact-title">Our staff are readily available to assist with any communication needs you may have</h2>
 
             <figure class="contact-banner">
-              <img src="./assets/images/contact.png" alt="contact banner">
+              <img src="/images/contact.png" alt="contact banner">
             </figure>
           </div>
 
@@ -341,16 +324,10 @@
 
         </div>
       </section>
-
     </article>
 
   </main>
-
-
-
-
-
-  <!-- 
+    <!-- 
     - #FOOTER
   -->
 
@@ -362,33 +339,9 @@
         <div class="footer-brand">
 
           <a href="#" class="logo">
-            <img src="./assets/images/logo.png" alt="Funel logo">
+            <img src="/images/logo.png" alt="Funel logo">
           </a>
 
-          <p class="footer-text">Follow us on</p>
-
-          <ul class="social-list">
-
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-instagram"></ion-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#"" class="social-link">
-                <ion-icon name="logo-youtube"></ion-icon>
-              </a>
-            </li>
-
-            <li>
-              <a href="#" class="social-link">
-                <ion-icon name="logo-facebook"></ion-icon>
-              </a>
-            </li>
-
-          </ul>
 
         </div>
 
@@ -449,7 +402,7 @@
             </li>
 
             <li>
-              <a href="#" class="footer-link">Terms & Conditions</a>
+              <a href="#" class="footer-link">Terms/Conditions</a>
             </li>
 
           </ul>
@@ -481,17 +434,10 @@
 
     <div class="footer-bottom">
       <p class="copyright">
-        &copy; 2024 <a href="#">@Mandala</a> All right reserved
-      </p>
+        &copy; 2024 <a href="#">@Mandala</a> All right reserved</p>
     </div>
-
-  </footer>
-
-
-
-
-
-  <!-- 
+</footer>
+ <!-- 
     - #GO TO TOP
   -->
 
@@ -499,21 +445,16 @@
     <ion-icon name="chevron-up-outline"></ion-icon>
   </a>
 
-
-
-
-
   <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js"></script>
+  <script src="/Js/script.js"></script>
 
   <!-- 
     - ionicon link
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
 </body>
 
 </html>
