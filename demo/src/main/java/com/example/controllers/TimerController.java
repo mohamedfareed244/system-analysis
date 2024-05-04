@@ -50,9 +50,19 @@ public class TimerController {
     //     }
     //     return "redirect:/";
     // }
+    @PostMapping("/login")
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
+        User user = userRepository.findByUsername(username);
+        if (user != null && user.getPassword().equals(password)) {
+            session.setAttribute("user", user);
+            return "redirect:/timer";
+        }
+        return "redirect:/login";
+    }
 
     @GetMapping("/signup")
-    public String showSignupForm() {
+    public String showSignupForm(Model model) {
+        model.addAttribute("tasks", taskRepository.findAll());
         return "signup"; 
     }
 
@@ -60,11 +70,11 @@ public class TimerController {
     public String signup(@RequestParam String username, @RequestParam String password, HttpSession session) {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
-         
+            session.setAttribute("user", existingUser);
             return "redirect:/timer";
         }
 
-     
+     else{
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
@@ -76,35 +86,24 @@ public class TimerController {
 
      
         return "redirect:/timer";
+     }
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
-        User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-            session.setAttribute("user", user);
-            return "redirect:/timer";
-        }
-        return "redirect:/login";
-    }
-
+    
     @GetMapping("/timer")
     public String getTimerPage(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-           
-            return "redirect:/login"; 
+            return "redirect:/login";
+        } else {
+            List<Task> tasks = taskRepository.findByUser(user);
+            model.addAttribute("tasks", tasks);
+            TimerService timerService = new TimerService();
+            model.addAttribute("timerService", timerService);
+            return "timer";
         }
-    else{
-        List<Task> tasks = taskRepository.findByUser(user);
-        model.addAttribute("tasks", tasks);
-        TimerService timerService = new TimerService();
-        model.addAttribute("timerService", timerService);
-    
-        return "timer";
     }
-    }
-
+   
     @PostMapping("/timer/start")
     public String startTimer(@RequestParam("focusDuration") int focusDuration,
                              @RequestParam("breakDuration") int breakDuration) {
@@ -136,50 +135,50 @@ public class TimerController {
     }
 
     @PostMapping("/timer/addTask")
-    public String addTask(@ModelAttribute Task task, HttpSession session) {
+    public String addTask(@ModelAttribute Task tasks, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        task.setUser(user);
+        tasks.setUser(user);
 
-        taskRepository.save(task);
+        taskRepository.save(tasks);
         return "redirect:/timer";
     }
 
     @GetMapping("/timer/editTask/{taskId}")
     public String showEditTaskForm(@PathVariable("taskId") Long taskId, Model model) {
-        Task task = taskRepository.findById(taskId)
+        Task tasks = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-        model.addAttribute("task", task);
+        model.addAttribute("tasks", tasks);
         return "edit-task";
     }
 
     @PostMapping("/timer/editTask/{taskId}")
-    public String updateTask(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("task") Task updatedTask,
+    public String updateTask(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("tasks") Task updatedTask,
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "edit-task";
         } else {
-            Task task = taskRepository.findById(taskId)
+            Task tasks = taskRepository.findById(taskId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-            task.setDescription(updatedTask.getDescription());
-            taskRepository.save(task);
+            tasks.setDescription(updatedTask.getDescription());
+            taskRepository.save(tasks);
             return "redirect:/timer";
         }
     }
 
     @PostMapping("/timer/deleteTask/{taskId}")
     public String deleteTask(@PathVariable("taskId") Long taskId) {
-        Task task = taskRepository.findById(taskId)
+        Task tasks = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-        taskRepository.delete(task);
+        taskRepository.delete(tasks);
         return "redirect:/timer";
     }
    
     @PostMapping("/timer/finishTask/{taskId}")
     public ResponseEntity<String> finishTask(@PathVariable("taskId") Long taskId) {
-        Task task = taskRepository.findById(taskId)
+        Task tasks = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-        task.setFinished(true);
-        taskRepository.save(task);
+        tasks.setFinished(true);
+        taskRepository.save(tasks);
         return ResponseEntity.ok("Task finished successfully.");
     }
 }

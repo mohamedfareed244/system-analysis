@@ -15,6 +15,8 @@
         <span id="timer-time">25:00</span>
         <button id="start-timer">Start</button>
         <button id="stop-timer">Stop</button>
+        <button id="reset-timer">Reset</button>
+        <button id="start-break">Start Break</button>
     </div>
     
     <div>
@@ -24,18 +26,18 @@
                 <th>Task</th>
                 <th>Actions</th>
             </tr>
-            <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
-                <td th:text="${task.description}"></td>
+            <tr id="task-1" th:each="tasks: ${tasks}" th:class="${tasks.finished}?'finished-task':''">
+                <td th:text="${tasks.description}"></td>
                 <td>
-                    <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
-                        <input type="text" name="description" th:value="${task.description}" required title="input">
+                    <form th:action="@{/timer/editTask/{taskId}(taskId=${tasks.id})}" method="post">
+                        <input type="text" name="description" th:value="${tasks.description}" required title="input">
                         <button type="submit">Edit</button>
                     </form>
-                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${tasks.id})}" method="post">
                         <button type="submit">Delete</button>
                     </form>
-                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post">
-                        <button type="submit" class="finish-button" data-task-id="${task.id}">Finish</button>
+                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${tasks.id})}" method="post">
+                        <button type="submit" class="finish-button" data-task-id="${tasks.id}">Finish</button>
                     </form>
                 </td>
             </tr>
@@ -87,11 +89,28 @@
         clearInterval(timerInterval);
     }
 
+    function resetTimer() {
+    clearInterval(timerInterval);
+    var timerTime = document.getElementById("timer-time");
+    timerTime.innerHTML = "25:00";
+    }
+
+    function startBreak() {
+    clearInterval(timerInterval);
+    var timerTime = document.getElementById("timer-time");
+    timerTime.innerHTML = "05:00";
+    startTimer();
+    }
     var startButton = document.getElementById("start-timer");
     startButton.addEventListener("click", startTimer);
 
     var stopButton = document.getElementById("stop-timer");
     stopButton.addEventListener("click", stopTimer);
+    var resetButton = document.getElementById("reset-timer");
+    resetButton.addEventListener("click", resetTimer);
+
+    var breakButton = document.getElementById("start-break");
+    breakButton.addEventListener("click", startBreak);
 
     function finishTask(taskId) {
     const taskRow = document.getElementById('task-' + taskId);
@@ -112,11 +131,7 @@
     .catch(error => {
         console.error('Error finishing task:', error);
     });
-
-
-
-
-
+    
     document.addEventListener('DOMContentLoaded', function() {
     var finishButtons = document.getElementsByClassName('finish-button');
     for (var i = 0; i < finishButtons.length; i++) {
@@ -126,6 +141,9 @@
         });
     }
 });
+    
+    
+   
 }
     
 </script>
