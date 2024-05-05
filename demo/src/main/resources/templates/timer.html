@@ -4,58 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <title>Timer Page</title>
+    <link href="/css/styles.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <style>
+    <!-- <style>
     .finished-task {
         background-color: #eee;
         text-decoration: line-through;
     }
-</style>
-    <h1>Timer</h1>
+</style> -->
 
-    <div id="timer">
-        <span id="timer-label">Focus</span>
-        <span id="timer-time">25:00</span>
-        <button id="start-timer">Start</button>
-        <button id="stop-timer">Stop</button>
-        <button id="reset-timer">Reset</button>
-        <button id="start-break">Start Break</button>
-    </div>
-    
-    <div>
-        <h2>Tasks</h2>
-        <table>
-            <tr>
-                <th>Task</th>
-                <th>Actions</th>
-            </tr>
-            <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
-                <td th:text="${task.description}"></td>
-                <td>
-                    <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
-                        <input type="text" name="description" th:value="${task.description}" required title="input">
-                        <button type="submit">Edit</button>
-                    </form>
-                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
-                        <button type="submit">Delete</button>
-                    </form>
-                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" >
-                        <button type="submit" class="finish-button" data-task-id="${task.id}" 
-                       >Finish</button>
-                    </form>
-                </td>
-            </tr>
-        </table>
+  
+
+    <div class="container">
+        <div id="timer" class="timer-container">
+            <h3>Welcome!</h3> <h1 th:value="${user.username}" > </h1>
+            <div class="timer-circle">
+                <span id="timer-label">Focus</span>
+                <span id="timer-time">25:00</span>
+            </div>
+            <div class="timer-controls">
+                <button id="start-timer" class="oval-button">Start</button>
+                <button id="stop-timer" class="oval-button">Stop</button>
+                <button id="reset-timer" class="oval-button">Reset</button>
+                <button id="start-break" class="oval-button">Start Break</button>
+            </div>
+        </div>
         
-        <h3>Add Task</h3>
-        <form action="/timer/addTask" method="post">
-            <input type="text" name="description" required title="input">
-            <button type="submit">Add Task</button>
-        </form>
+        <div class="tasks-container">
+            <div class="tasks-box">
+                <h2>Tasks</h2>
+                <div class="tasks-scroll">
+                    <table>
+                        <tr>
+                            <th>Task</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
+                            <td th:text="${task.description}"></td>
+                            <td>
+                                <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
+                                    <input type="text" name="description" th:value="${task.description}" required title="input" class="oval-input">
+                                    <button type="submit" class="oval-button">Edit</button>
+                                </form>
+                                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                                    <button type="submit" class="oval-button">Delete</button>
+                                </form>
+                                <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" class="finish-form">
+                                    <button type="submit" class="finish-button oval-button" data-task-id="${task.id}">Finish</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="add-task-box">
+                <h3>Add Task</h3>
+                <form action="/timer/addTask" method="post">
+                    <input type="text" name="description" required title="input" class="oval-input">
+                    <button type="submit" class="oval-button">Add Task</button>
+                </form>
+            </div>
+        </div>
     </div>
-    
+
+
+    <script src="script.js"></script>
     <!-- <div>
         <h2>Finished Tasks</h2>
         <table>

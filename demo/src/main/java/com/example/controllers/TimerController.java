@@ -98,6 +98,7 @@ public class TimerController {
         } else {
             List<Task> tasks = taskRepository.findByUser(user);
             model.addAttribute("tasks", tasks);
+            model.addAttribute("user", user);
             TimerService timerService = new TimerService();
             model.addAttribute("timerService", timerService);
             return "timer";

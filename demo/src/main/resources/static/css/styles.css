@@ -1,0 +1,108 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.timer-container {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 120px;
+  
+}
+
+.timer-circle {
+    width: 200px;
+    height: 200px;
+    background-color: #ffcccc;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer-circle span {
+    font-size: 24px;
+    color: #fff;
+}
+
+.timer-controls button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #ff6666;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tasks-container {
+    
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.tasks-box {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 300px;
+    width: 80%; /* Adjust width as needed */
+    margin-bottom: 20px; 
+    margin-top: 80px;
+    margin-left: 40px;
+}
+
+.tasks-scroll table {
+    width: 100%;
+}
+
+.tasks-scroll table th, .tasks-scroll table td {
+    padding: 10px;
+}
+
+.add-task-box {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 300px;
+    width: 80%; /* Adjust width as needed */
+    margin-bottom: 20px; 
+    margin-top: 80px;
+    margin-left: 40px;
+}
+
+.oval-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.oval-button {
+    border-radius: 20px;
+}
+
+.finished-task {
+    background-color: #eee;
+    text-decoration: line-through;
+}
