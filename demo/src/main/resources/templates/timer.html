@@ -19,7 +19,7 @@
 
     <div class="container">
         <div id="timer" class="timer-container">
-            <h3>Welcome!</h3> <h1 th:value="${user.username}" > </h1>
+            <!-- <h3>Welcome!</h3> <h1 th:value="${user.username}" > </h1> -->
             <div class="timer-circle">
                 <span id="timer-label">Focus</span>
                 <span id="timer-time">25:00</span>
@@ -51,7 +51,7 @@
                                 <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
                                     <button type="submit" class="oval-button">Delete</button>
                                 </form>
-                                <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" class="finish-form">
+                                <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" >
                                     <button type="submit" class="finish-button oval-button" data-task-id="${task.id}">Finish</button>
                                 </form>
                             </td>
