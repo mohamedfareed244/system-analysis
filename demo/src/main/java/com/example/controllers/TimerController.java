@@ -151,28 +151,49 @@ public class TimerController {
         return "edit-task";
     }
 
+    // @PostMapping("/timer/editTask/{taskId}")
+    // public String updateTask(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("tasks") Task updatedTask,
+    //                          BindingResult bindingResult) {
+    //     if (bindingResult.hasErrors()) {
+    //         return "edit-task";
+    //     } else {
+    //         Task tasks = taskRepository.findById(taskId)
+    //                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+    //         tasks.setDescription(updatedTask.getDescription());
+    //         taskRepository.save(tasks);
+    //         return "redirect:/timer";
+    //     }
+    // }
+
+    // @PostMapping("/timer/deleteTask/{taskId}")
+    // public String deleteTask(@PathVariable("taskId") Long taskId) {
+    //     Task tasks = taskRepository.findById(taskId)
+    //             .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+    //     taskRepository.delete(tasks);
+    //     return "redirect:/timer";
+    // }
     @PostMapping("/timer/editTask/{taskId}")
-    public String updateTask(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("tasks") Task updatedTask,
-                             BindingResult bindingResult) {
+    public ResponseEntity<String> updateTask(@PathVariable("taskId") Long taskId,
+                                             @Valid @ModelAttribute("tasks") Task updatedTask,
+                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "edit-task";
+            return ResponseEntity.badRequest().body("Invalid task data.");
         } else {
             Task tasks = taskRepository.findById(taskId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
             tasks.setDescription(updatedTask.getDescription());
             taskRepository.save(tasks);
-            return "redirect:/timer";
+            return ResponseEntity.ok("Task updated successfully.");
         }
     }
-
+    
     @PostMapping("/timer/deleteTask/{taskId}")
-    public String deleteTask(@PathVariable("taskId") Long taskId) {
+    public ResponseEntity<String> deleteTask(@PathVariable("taskId") Long taskId) {
         Task tasks = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
         taskRepository.delete(tasks);
-        return "redirect:/timer";
+        return ResponseEntity.ok("Task deleted successfully.");
     }
-   
     @PostMapping("/timer/finishTask/{taskId}")
     public ResponseEntity<String> finishTask(@PathVariable("taskId") Long taskId) {
         Task tasks = taskRepository.findById(taskId)

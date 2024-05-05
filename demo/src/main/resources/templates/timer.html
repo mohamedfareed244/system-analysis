@@ -2,12 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-    content="width=device-width, height=device-height,  initial-scale=1.0, "
-  />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <title>Timer Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <style>
+    .finished-task {
+        background-color: #eee;
+        text-decoration: line-through;
+    }
+</style>
     <h1>Timer</h1>
 
     <div id="timer">
@@ -26,18 +31,19 @@
                 <th>Task</th>
                 <th>Actions</th>
             </tr>
-            <tr id="task-1" th:each="tasks: ${tasks}" th:class="${tasks.finished}?'finished-task':''">
-                <td th:text="${tasks.description}"></td>
+            <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
+                <td th:text="${task.description}"></td>
                 <td>
-                    <form th:action="@{/timer/editTask/{taskId}(taskId=${tasks.id})}" method="post">
-                        <input type="text" name="description" th:value="${tasks.description}" required title="input">
+                    <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
+                        <input type="text" name="description" th:value="${task.description}" required title="input">
                         <button type="submit">Edit</button>
                     </form>
-                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${tasks.id})}" method="post">
+                    <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
                         <button type="submit">Delete</button>
                     </form>
-                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${tasks.id})}" method="post">
-                        <button type="submit" class="finish-button" data-task-id="${tasks.id}">Finish</button>
+                    <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" >
+                        <button type="submit" class="finish-button" data-task-id="${task.id}" 
+                       >Finish</button>
                     </form>
                 </td>
             </tr>
@@ -50,103 +56,101 @@
         </form>
     </div>
     
-    <div>
+    <!-- <div>
         <h2>Finished Tasks</h2>
         <table>
-            
             <tr id="finished-task-section"></tr>
-          
-          
         </table>
-    </div>
-<script>
-    var timerInterval;
+    </div> -->
 
-    function startTimer() {
+    <script>
+        var timerInterval;
         var timerTime = document.getElementById("timer-time");
-        var time = timerTime.innerHTML.split(":");
-        var minutes = parseInt(time[0]);
-        var seconds = parseInt(time[1]);
-
-        timerInterval = setInterval(function() {
-            if (seconds === 0) {
-                if (minutes === 0) {
-                    clearInterval(timerInterval);
-                    return;
-                }
-                minutes--;
-                seconds = 59;
-            } else {
-                seconds--;
-            }
-
-            timerTime.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" +
-                (seconds < 10 ? "0" + seconds : seconds);
-        }, 1000);
-    }
-
-    function stopTimer() {
-        clearInterval(timerInterval);
-    }
-
-    function resetTimer() {
-    clearInterval(timerInterval);
-    var timerTime = document.getElementById("timer-time");
-    timerTime.innerHTML = "25:00";
-    }
-
-    function startBreak() {
-    clearInterval(timerInterval);
-    var timerTime = document.getElementById("timer-time");
-    timerTime.innerHTML = "05:00";
-    startTimer();
-    }
-    var startButton = document.getElementById("start-timer");
-    startButton.addEventListener("click", startTimer);
-
-    var stopButton = document.getElementById("stop-timer");
-    stopButton.addEventListener("click", stopTimer);
-    var resetButton = document.getElementById("reset-timer");
-    resetButton.addEventListener("click", resetTimer);
-
-    var breakButton = document.getElementById("start-break");
-    breakButton.addEventListener("click", startBreak);
-
-    function finishTask(taskId) {
-    const taskRow = document.getElementById('task-' + taskId);
-    const finishedTaskSection = document.getElementById('finished-task-section');
-    finishedTaskSection.appendChild(taskRow);
-
-    const finishButton = taskRow.querySelector('.finish-button');
-    finishButton.remove();
-
-    fetch('/timer/finishTask/' + taskId, {
-        method: 'POST'
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.error('Failed to finish task: ' + response.status);
+        var storedTime = localStorage.getItem("timerTime");
+        if (storedTime) {
+            timerTime.innerHTML = storedTime;
         }
-    })
-    .catch(error => {
-        console.error('Error finishing task:', error);
-    });
-    
-    document.addEventListener('DOMContentLoaded', function() {
-    var finishButtons = document.getElementsByClassName('finish-button');
-    for (var i = 0; i < finishButtons.length; i++) {
-        finishButtons[i].addEventListener('click', function(event) {
-            var taskId = event.target.getAttribute('data-task-id');
-            finishTask(taskId);
-        });
-    }
-});
-    
-    
-   
-}
-    
-</script>
 
+        function startTimer() {
+            var time = timerTime.innerHTML.split(":");
+            var minutes = parseInt(time[0]);
+            var seconds = parseInt(time[1]);
+
+            timerInterval = setInterval(function() {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timerInterval);
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+
+                timerTime.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                    (seconds < 10 ? "0" + seconds : seconds);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerTime.innerHTML = "25:00";
+            localStorage.removeItem("timerTime");
+        }
+
+        function startBreak() {
+            clearInterval(timerInterval);
+            timerTime.innerHTML = "05:00";
+            startTimer();
+        }
+
+        var startButton = document.getElementById("start-timer");
+        startButton.addEventListener("click", function() {
+            startTimer();
+            localStorage.setItem("timerTime", timerTime.innerHTML);
+        });
+
+        var stopButton = document.getElementById("stop-timer");
+        stopButton.addEventListener("click", stopTimer);
+
+        var resetButton = document.getElementById("reset-timer");
+        resetButton.addEventListener("click", resetTimer);
+
+        var breakButton = document.getElementById("start-break");
+        breakButton.addEventListener("click", startBreak);
+
+        var finishForms = document.getElementsByClassName("finish-form");
+
+for (var i = 0; i < finishForms.length; i++) {
+    finishForms[i].addEventListener("submit", function(event) {
+        event.preventDefault();
+        var form = this;
+        var taskId = extractTaskIdFromAction(form.getAttribute("action"));
+        finishTask(taskId, form);
+    });
+}
+
+function extractTaskIdFromAction(action) {
+    var regex = /\/(\d+)$/;
+    var match = regex.exec(action);
+    if (match && match.length > 1) {
+        return match[1];
+    }
+    return null;
+}
+
+function finishTask(taskId, form) {
+    const taskRow = document.getElementById("task-" + taskId);
+    taskRow.classList.add("finished-task");
+    form.remove();
+    const finishedTaskSection = document.getElementById("finished-task-section");
+    finishedTaskSection.appendChild(taskRow);
+}
+    </script>
 </body>
 </html>
