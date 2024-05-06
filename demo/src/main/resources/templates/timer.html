@@ -29,6 +29,7 @@
                 <button id="stop-timer" class="oval-button">Stop</button>
                 <button id="reset-timer" class="oval-button">Reset</button>
                 <button id="start-break" class="oval-button">Start Break</button>
+                <button id="start-focus" class="oval-button">Start Focus</button>
             </div>
         </div>
         
@@ -79,66 +80,109 @@
     </div> -->
 
     <script>
-        var timerInterval;
-        var timerTime = document.getElementById("timer-time");
-        var storedTime = localStorage.getItem("timerTime");
-        if (storedTime) {
-            timerTime.innerHTML = storedTime;
-        }
-
-        function startTimer() {
-            var time = timerTime.innerHTML.split(":");
-            var minutes = parseInt(time[0]);
-            var seconds = parseInt(time[1]);
-
-            timerInterval = setInterval(function() {
-                if (seconds === 0) {
-                    if (minutes === 0) {
-                        clearInterval(timerInterval);
-                        return;
-                    }
-                    minutes--;
-                    seconds = 59;
-                } else {
-                    seconds--;
+       var timerInterval;
+            var timerTime = document.getElementById("timer-time");
+            var timerLabel = document.getElementById("timer-label");
+            var storedTime = localStorage.getItem("timerTime");
+            var isBreakTime = false;
+            
+            if (storedTime) {
+                var currentTime = new Date().getTime();
+                var storedTimeMillis = parseInt(storedTime);
+                var elapsedTimeSeconds = Math.floor((currentTime - storedTimeMillis) / 1000);
+                var remainingTimeSeconds = Math.max(0, 25 * 60 - elapsedTimeSeconds);
+                
+                if (localStorage.getItem("isBreakTime") === "true") {
+                    isBreakTime = true;
+                    timerLabel.innerHTML = "Break";
                 }
 
+                setTimerDisplay(remainingTimeSeconds);
+                startTimer(remainingTimeSeconds);
+            }
+
+            function setTimerDisplay(totalSeconds) {
+                var minutes = Math.floor(totalSeconds / 60);
+                var seconds = totalSeconds % 60;
                 timerTime.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" +
                     (seconds < 10 ? "0" + seconds : seconds);
-            }, 1000);
-        }
+            }
 
-        function stopTimer() {
-            clearInterval(timerInterval);
-        }
+            function startTimer(totalSeconds) {
+                var minutes = Math.floor(totalSeconds / 60);
+                var seconds = totalSeconds % 60;
 
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerTime.innerHTML = "25:00";
-            localStorage.removeItem("timerTime");
-        }
+                timerInterval = setInterval(function() {
+                    if (seconds === 0) {
+                        if (minutes === 0) {
+                            clearInterval(timerInterval);
+                            return;
+                        }
+                        minutes--;
+                        seconds = 59;
+                    } else {
+                        seconds--;
+                    }
 
-        function startBreak() {
-            clearInterval(timerInterval);
-            timerTime.innerHTML = "05:00";
-            startTimer();
-        }
+                    setTimerDisplay(minutes * 60 + seconds);
+                }, 1000);
+            }
 
-        var startButton = document.getElementById("start-timer");
-        startButton.addEventListener("click", function() {
-            startTimer();
-            localStorage.setItem("timerTime", timerTime.innerHTML);
-        });
+            function stopTimer() {
+                clearInterval(timerInterval);
+            }
 
-        var stopButton = document.getElementById("stop-timer");
-        stopButton.addEventListener("click", stopTimer);
+            function resetTimer() {
+                clearInterval(timerInterval);
 
-        var resetButton = document.getElementById("reset-timer");
-        resetButton.addEventListener("click", resetTimer);
+                if (isBreakTime) {
+                    timerTime.innerHTML = "05:00";
+                    startTimer(5 * 60); // 5 minutes in seconds
+                } else {
+                    timerTime.innerHTML = "25:00";
+                    startTimer(25 * 60); // 25 minutes in seconds
+                }
+            }
 
-        var breakButton = document.getElementById("start-break");
-        breakButton.addEventListener("click", startBreak);
+            function startBreak() {
+                clearInterval(timerInterval);
+                timerTime.innerHTML = "05:00";
+                startTimer(5 * 60); // 5 minutes in seconds
+                isBreakTime = true;
+                timerLabel.innerHTML = "Break";
+                localStorage.setItem("isBreakTime", "true");
+            }
 
+            function startFocus() {
+                clearInterval(timerInterval);
+                timerTime.innerHTML = "25:00";
+                startTimer(25 * 60); // 25 minutes in seconds
+                isBreakTime = false;
+                timerLabel.innerHTML = "Focus";
+                localStorage.setItem("isBreakTime", "false");
+            }
+
+            var startButton = document.getElementById("start-timer");
+            startButton.addEventListener("click", function() {
+                var time = timerTime.innerHTML.split(":");
+                var minutes = parseInt(time[0]);
+                var seconds = parseInt(time[1]);
+                var totalSeconds = minutes * 60 + seconds;
+                startTimer(totalSeconds);
+                localStorage.setItem("timerTime", (new Date().getTime() - (25 * 60 - totalSeconds) * 1000).toString());
+            });
+
+            var stopButton = document.getElementById("stop-timer");
+            stopButton.addEventListener("click", stopTimer);
+
+            var resetButton = document.getElementById("reset-timer");
+            resetButton.addEventListener("click", resetTimer);
+
+            var breakButton = document.getElementById("start-break");
+            breakButton.addEventListener("click",startBreak);
+
+            var focusButton = document.getElementById("start-focus");
+            focusButton.addEventListener("click", startFocus);
         var finishForms = document.getElementsByClassName("finish-form");
 
 for (var i = 0; i < finishForms.length; i++) {
