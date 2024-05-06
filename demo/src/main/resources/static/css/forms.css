@@ -36,13 +36,17 @@ label {
     color: #ccc6c6;
 }
 
-/* Input field */
+
 .input-field {
     width: 100%;
     padding: 10px;
-    border: 50px solid #ccc;
-    border-radius: 5px;
+    /* border: 50px solid #ccc;
+    border-radius: 5px; */
     box-sizing: border-box;
+       padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    margin-right: 10px;
 }
 
 /* Submit button */
@@ -60,6 +64,16 @@ label {
 
 .btn-submit:hover {
     background-color: #f3c5c5;
+}
+.oval-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    margin-right: 10px;
+}
+
+.oval-button {
+    border-radius: 20px;
 }
 
 /* Responsive styles */

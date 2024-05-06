@@ -110,6 +110,7 @@ body {
 
 .oval-button {
     border-radius: 20px;
+    background-color: #f3a8a8;
 }
 
 .finished-task {
