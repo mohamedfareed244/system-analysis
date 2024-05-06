@@ -71,7 +71,7 @@ public class TimerController {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             session.setAttribute("user", existingUser);
-            return "redirect:/timer";
+            return "redirect:/signup";
         }
 
      else{
