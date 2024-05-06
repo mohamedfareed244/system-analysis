@@ -31,6 +31,18 @@
                 <button id="start-break" class="oval-button">Start Break</button>
                 <button id="start-focus" class="oval-button">Start Focus</button>
             </div>
+
+            <div>
+                <h3>Focus Duration (minutes)</h3>
+                <input type="number" id="focus-duration" value="25" title="input" />
+                <button id="update-focus">Update</button>
+              </div>
+          
+              <div>
+                <h3>Break Duration (minutes)</h3>
+                <input type="number" id="break-duration" value="5" title="input"/>
+                <button id="update-break">Update</button>
+              </div>
         </div>
         
         <div class="tasks-container">
@@ -80,109 +92,191 @@
     </div> -->
 
     <script>
-       var timerInterval;
-            var timerTime = document.getElementById("timer-time");
-            var timerLabel = document.getElementById("timer-label");
-            var storedTime = localStorage.getItem("timerTime");
-            var isBreakTime = false;
-            
-            if (storedTime) {
-                var currentTime = new Date().getTime();
-                var storedTimeMillis = parseInt(storedTime);
-                var elapsedTimeSeconds = Math.floor((currentTime - storedTimeMillis) / 1000);
-                var remainingTimeSeconds = Math.max(0, 25 * 60 - elapsedTimeSeconds);
-                
-                if (localStorage.getItem("isBreakTime") === "true") {
-                    isBreakTime = true;
-                    timerLabel.innerHTML = "Break";
-                }
+        var timerInterval;
+      var timerTime = document.getElementById("timer-time");
+      var timerLabel = document.getElementById("timer-label");
+      var storedTime = localStorage.getItem("timerTime");
+      var isBreakTime = false;
 
-                setTimerDisplay(remainingTimeSeconds);
-                startTimer(remainingTimeSeconds);
+      // Default durations
+      var defaultFocusDuration = 25; // in minutes
+      var defaultBreakDuration = 5; // in minutes
+
+      // Retrieve user-defined durations from local storage
+      var userFocusDuration = localStorage.getItem("userFocusDuration");
+      var userBreakDuration = localStorage.getItem("userBreakDuration");
+
+      // Set the initial timer durations
+      var focusDuration = userFocusDuration
+        ? parseInt(userFocusDuration)
+        : defaultFocusDuration;
+      var breakDuration = userBreakDuration
+        ? parseInt(userBreakDuration)
+        : defaultBreakDuration;
+
+      // Set the timer label and time based on the current mode
+      function setTimerMode(isBreakMode) {
+        if (isBreakMode) {
+          timerLabel.innerHTML = "Break";
+          setTimerDisplay(breakDuration * 60);
+        } else {
+          timerLabel.innerHTML = "Focus";
+          setTimerDisplay(focusDuration * 60);
+        }
+        isBreakTime = isBreakMode;
+        localStorage.setItem("isBreakTime", isBreakMode.toString());
+      }
+
+      // Set the timer display based on the total seconds
+      function setTimerDisplay(totalSeconds) {
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+        timerTime.innerHTML =
+          (minutes < 10 ? "0" + minutes : minutes) +
+          ":" +
+          (seconds < 10 ? "0" + seconds : seconds);
+      }
+
+      // Start the timer with the specified total seconds
+      function startTimer(totalSeconds) {
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+
+        timerInterval = setInterval(function () {
+          if (seconds === 0) {
+            if (minutes === 0) {
+              clearInterval(timerInterval);
+              return;
             }
+            minutes--;
+            seconds = 59;
+          } else {
+            seconds--;
+          }
 
-            function setTimerDisplay(totalSeconds) {
-                var minutes = Math.floor(totalSeconds / 60);
-                var seconds = totalSeconds % 60;
-                timerTime.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" +
-                    (seconds < 10 ? "0" + seconds : seconds);
-            }
+          setTimerDisplay(minutes * 60 + seconds);
+        }, 1000);
+      }
 
-            function startTimer(totalSeconds) {
-                var minutes = Math.floor(totalSeconds / 60);
-                var seconds = totalSeconds % 60;
+      // Stop the timer
+      function stopTimer() {
+        clearInterval(timerInterval);
+      }
 
-                timerInterval = setInterval(function() {
-                    if (seconds === 0) {
-                        if (minutes === 0) {
-                            clearInterval(timerInterval);
-                            return;
-                        }
-                        minutes--;
-                        seconds = 59;
-                    } else {
-                        seconds--;
-                    }
+      // Reset the timer to the default durations
+      function resetTimer() {
+        clearInterval(timerInterval);
+        if (isBreakTime) {
+          setTimerMode(true);
+        } else {
+          setTimerMode(false);
+        }
+      }
 
-                    setTimerDisplay(minutes * 60 + seconds);
-                }, 1000);
-            }
+      // Start the break timer
+      function startBreak() {
+        clearInterval(timerInterval);
+        setTimerMode(true);
+        startTimer(breakDuration * 60);
+      }
 
-            function stopTimer() {
-                clearInterval(timerInterval);
-            }
+      // Start the focus timer
+      function startFocus() {
+        clearInterval(timerInterval);
+        setTimerMode(false);
+        startTimer(focusDuration * 60);
+      }
 
-            function resetTimer() {
-                clearInterval(timerInterval);
+      var startButton = document.getElementById("start-timer");
+      startButton.addEventListener("click", function () {
+        var time = timerTime.innerHTML.split(":");
+        var minutes = parseInt(time[0]);
+        var seconds = parseInt(time[1]);
+        var totalSeconds = minutes * 60 + seconds;
+        startTimer(totalSeconds);
+        localStorage.setItem(
+          "timerTime",
+          (
+            new Date().getTime() -
+            (focusDuration * 60 - totalSeconds) * 1000
+          ).toString()
+        );
+      });
 
-                if (isBreakTime) {
-                    timerTime.innerHTML = "05:00";
-                    startTimer(5 * 60); // 5 minutes in seconds
-                } else {
-                    timerTime.innerHTML = "25:00";
-                    startTimer(25 * 60); // 25 minutes in seconds
-                }
-            }
+      var stopButton = document.getElementById("stop-timer");
+      stopButton.addEventListener("click", stopTimer);
 
-            function startBreak() {
-                clearInterval(timerInterval);
-                timerTime.innerHTML = "05:00";
-                startTimer(5 * 60); // 5 minutes in seconds
-                isBreakTime = true;
-                timerLabel.innerHTML = "Break";
-                localStorage.setItem("isBreakTime", "true");
-            }
+      var resetButton = document.getElementById("reset-timer");
+     resetButton.addEventListener("click", resetTimer);
 
-            function startFocus() {
-                clearInterval(timerInterval);
-                timerTime.innerHTML = "25:00";
-                startTimer(25 * 60); // 25 minutes in seconds
-                isBreakTime = false;
-                timerLabel.innerHTML = "Focus";
-                localStorage.setItem("isBreakTime", "false");
-            }
+      var breakButton = document.getElementById("start-break");
+      breakButton.addEventListener("click", startBreak);
 
-            var startButton = document.getElementById("start-timer");
-            startButton.addEventListener("click", function() {
-                var time = timerTime.innerHTML.split(":");
-                var minutes = parseInt(time[0]);
-                var seconds = parseInt(time[1]);
-                var totalSeconds = minutes * 60 + seconds;
-                startTimer(totalSeconds);
-                localStorage.setItem("timerTime", (new Date().getTime() - (25 * 60 - totalSeconds) * 1000).toString());
-            });
+      var focusButton = document.getElementById("start-focus");
+      focusButton.addEventListener("click", startFocus);
 
-            var stopButton = document.getElementById("stop-timer");
-            stopButton.addEventListener("click", stopTimer);
+      var updateFocusButton = document.getElementById("update-focus");
+      updateFocusButton.addEventListener("click", updateFocusDuration);
 
-            var resetButton = document.getElementById("reset-timer");
-            resetButton.addEventListener("click", resetTimer);
+      var updateBreakButton = document.getElementById("update-break");
+      updateBreakButton.addEventListener("click", updateBreakDuration);
 
-            var breakButton = document.getElementById("start-break");
-            breakButton.addEventListener("click",startBreak);
+      // Save user-defined durations to local storage
+      function saveUserDurations() {
+        localStorage.setItem("userFocusDuration", focusDuration.toString());
+        localStorage.setItem("userBreakDuration", breakDuration.toString());
+      }
 
-            var focusButton = document.getElementById("start-focus");
-            focusButton.addEventListener("click", startFocus);
+      function updateFocusDuration() {
+  var newFocusDuration = parseInt(
+    document.getElementById("focus-duration").value
+  );
+  if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
+    focusDuration = newFocusDuration;
+    saveUserDurations();
+    if (!isBreakTime) {
+      setTimerDisplay(focusDuration * 60);
+      stopTimer(); // Stop the timer immediately
+    }
+  }
+}
+
+// Update the break duration
+function updateBreakDuration() {
+  var newBreakDuration = parseInt(
+    document.getElementById("break-duration").value
+  );
+  if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
+    breakDuration = newBreakDuration;
+    saveUserDurations();
+    if (isBreakTime) {
+      setTimerDisplay(breakDuration * 60);
+      stopTimer(); // Stop the timer immediately
+    }
+  }
+}
+
+      // Check if the timer was running before and resume it
+      if (storedTime) {
+        var currentTime = new Date().getTime();
+        var elapsedTime = currentTime - parseInt(storedTime);
+        var remainingSeconds = Math.floor(elapsedTime / 1000);
+        var totalSeconds = isBreakTime ? breakDuration * 60 : focusDuration * 60;
+        var timeDifference = totalSeconds - remainingSeconds;
+
+        if (timeDifference > 0) {
+          startTimer(timeDifference);
+        } else {
+          clearInterval(timerInterval);
+          if (isBreakTime) {
+            setTimerMode(true);
+          } else {
+            setTimerMode(false);
+          }
+        }
+      } else {
+        setTimerMode(false);
+      }
         var finishForms = document.getElementsByClassName("finish-form");
 
 for (var i = 0; i < finishForms.length; i++) {
