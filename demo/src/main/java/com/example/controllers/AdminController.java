@@ -21,7 +21,7 @@ public class AdminController {
     @GetMapping("/listadmins")
     public ModelAndView GetAllAdmins(){
         ModelAndView newmodel=new ModelAndView("ListAdmins");
-        newmodel.addObject("Admins ", adminrepo.findAll());
+        newmodel.addObject("admins", adminrepo.findAll());
         return newmodel;
     }
 }
