@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+#sidebar{
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: #c54f4f; 
+    width: 200px; 
+    overflow: hidden;
+ 
+}
+#sidebarul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#sidebarul li {
+    width: 100%;
+    padding: 10px;
+    color: white;
+    font-family: sans-serif;
+    transition:0.3s;
+}
+#sidebarul li:hover{
+background-color:#983737;  ;
+cursor: pointer;
+}
+#sidebarul li hr {
+    margin: 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+#content-div{
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 80%;
+    height: 100%;
+    background-color: #ccc;
+}
+#content-div table {
+    border-collapse: collapse;
+    margin: auto;
+    width: 80%;
+    margin-top: 30px;
+   border-radius: 20px;
+    
+}
+#content-div th, td {
+    border: 1px solid rgb(3, 3, 3);
+    padding: 8px;
+    border-radius: 20px;
+}
+
+    </style>
+</head>
+<body>
+  
+        <div id="sidebar">
+            <ul id="sidebarul">
+                <li> List All Users </li>
+                <hr>
+                <li> List All Admins  </li>
+                <hr>
+                <li> Admins Access </li>
+            </ul>
+                </div>
+
+                <div id="content-div">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data 1</td>
+                                <td>Data 2</td>
+                                <td>Data 3</td>
+                                <td>Data 4</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+   
+   
+</body>
+</html>
