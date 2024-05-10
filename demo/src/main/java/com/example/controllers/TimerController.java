@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
+@RequestMapping("/")
 public class TimerController {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
