@@ -31,13 +31,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Data 1</td>
-                                <td>Data 2</td>
-                                <td>Data 3</td>
-                                <td>Data 4</td>
+                            <tr th:each="admin : ${admins}">
+                                <td th:text="${admin.id}"></td>
+                                <td th:text="${admin.name}"></td>
+                                <td th:text="${admin.phone}"></td>
+                                <td th:text="${admin.user_name}"></td>
+                                
                             </tr>
-                            <!-- Add more rows as needed -->
                         </tbody>
                     </table>
                     
