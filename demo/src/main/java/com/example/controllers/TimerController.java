@@ -67,7 +67,7 @@ public class TimerController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestParam String username, @RequestParam String password, HttpSession session) {
+    public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String phonenumber, HttpSession session) {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             session.setAttribute("user", existingUser);
@@ -78,6 +78,8 @@ public class TimerController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setName(name);
+        user.setPhonenumber(phonenumber);
 
       
         userRepository.save(user);

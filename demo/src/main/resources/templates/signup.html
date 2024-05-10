@@ -37,6 +37,14 @@
                 }
                 return true;
             }
+            function validatePhonenumber(phonenumber) {
+               
+                if (phonenumber.length != 11) {
+                    alert('phone number must be equal 11 digits long.');
+                    return false;
+                }
+                return true;
+            }
         };
     </script>
 </head>
@@ -45,11 +53,19 @@
     <form action="/signup" method="post" class="form-container">
         <div class="form-group">
             <label for="username">Email:</label>
-            <input type="text" class="oval-input" id="username" name="username" required >
+            <input type="text" class="oval-input" id="username" name="username" placeholder="please enter your email" required >
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="oval-input" id="name" name="name" placeholder="please enter your name " required title="input">
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" class="oval-input" id="password" name="password" required >
+            <input type="password" class="oval-input" id="password" name="password" placeholder="please enter 8 or more characters password" required >
+        </div>
+        <div class="form-group">
+            <label for="phonenumber">Phone Number:</label>
+            <input type="text" class="oval-input" id="phonenumber" name="phonenumber" placeholder="please enter your phone number" required pattern="[0-9]{11}" title="Phone number must be 11 digits long">
         </div>
         <div class="form-group">
             <input type="submit" value="Signup" class="btn-submit">

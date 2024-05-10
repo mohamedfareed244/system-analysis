@@ -16,7 +16,10 @@ public class User  implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
+    private String name ;
+    private String phonenumber;
     private String password;
+
 
     // @OneToMany(cascade = CascadeType.ALL)
     // private List<Task> tasks;
@@ -61,6 +64,25 @@ public class User  implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String username) {
+        this.name = name;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+   
+
 
     // public List<Task> getTasks() {
     //     return tasks;

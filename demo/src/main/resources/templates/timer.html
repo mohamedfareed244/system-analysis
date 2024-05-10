@@ -97,6 +97,11 @@
       var timerLabel = document.getElementById("timer-label");
       var storedTime = localStorage.getItem("timerTime");
       var isBreakTime = false;
+          // Retrieve the session ID from the server-side and store it in a variable
+       var sessionId = "<YOUR_SESSION_ID>";
+
+       // Store the session ID in the browser's local storage
+      localStorage.setItem("sessionId", sessionId);
 
       // Default durations
       var defaultFocusDuration = 25; // in minutes
@@ -186,6 +191,58 @@
         setTimerMode(false);
         startTimer(focusDuration * 60);
       }
+
+      function saveUserDurations() {
+    var focusDuration = parseInt(document.getElementById("focus-duration").value);
+    var breakDuration = parseInt(document.getElementById("break-duration").value);
+    
+    // Retrieve the session ID from local storage
+    var sessionId = localStorage.getItem("sessionId");
+
+    // Send an AJAX request to the server to save the user's durations
+    $.ajax({
+        url: "/saveUserDurations",
+        method: "POST",
+        data: {
+            sessionId: sessionId,
+            focusDuration: focusDuration,
+            breakDuration: breakDuration
+        },
+        success: function(response) {
+            console.log("User durations saved successfully");
+        },
+        error: function(xhr, status, error) {
+            console.error("Error saving user durations:", error);
+        }
+    });
+}
+function getUserDurations() {
+    // Retrieve the session ID from local storage
+    var sessionId = localStorage.getItem("sessionId");
+
+    // Send an AJAX request to the server to get the user's durations
+    $.ajax({
+        url: "/getUserDurations",
+        method: "GET",
+        data: {
+            sessionId: sessionId
+        },
+        success: function(response) {
+            // Parse the response and set the focus and break durations
+            var userDurations = JSON.parse(response);
+            var focusDuration = parseInt(userDurations.focusDuration);
+            var breakDuration = parseInt(userDurations.breakDuration);
+
+            // Set the timer durations
+            setTimerDurations(focusDuration, breakDuration);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error getting user durations:", error);
+        }
+    });
+}
+
+
 
       var startButton = document.getElementById("start-timer");
       startButton.addEventListener("click", function () {
