@@ -7,21 +7,29 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.repositories.AdminRepository;
+import com.example.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/Admin")
 public class AdminController {
     @Autowired
     AdminRepository adminrepo;
+    @Autowired
+    UserRepository user_repo;
+
     @GetMapping("/listusers")
     public ModelAndView GetAllUsers(){
-        return new ModelAndView("ListUsers");
+           ModelAndView newmodel=new ModelAndView("ListUsers");
+        newmodel.addObject("users", user_repo.findAll());
+        System.out.println("now "+user_repo.findAll());
+        return newmodel;
     }
 
     @GetMapping("/listadmins")
     public ModelAndView GetAllAdmins(){
         ModelAndView newmodel=new ModelAndView("ListAdmins");
         newmodel.addObject("admins", adminrepo.findAll());
+        System.out.println("now "+adminrepo.findAll());
         return newmodel;
     }
 }
