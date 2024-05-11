@@ -21,7 +21,7 @@ public class AdminController {
     public ModelAndView GetAllUsers(){
            ModelAndView newmodel=new ModelAndView("ListUsers");
         newmodel.addObject("users", user_repo.findAll());
-        System.out.println("now "+user_repo.findAll());
+       
         return newmodel;
     }
 
@@ -29,7 +29,7 @@ public class AdminController {
     public ModelAndView GetAllAdmins(){
         ModelAndView newmodel=new ModelAndView("ListAdmins");
         newmodel.addObject("admins", adminrepo.findAll());
-        System.out.println("now "+adminrepo.findAll());
+      
         return newmodel;
     }
 }
