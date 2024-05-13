@@ -1,0 +1,221 @@
+
+:root {
+
+    /**
+     * colors
+     */
+  
+    --maximum-yellow-red: hsl(37, 100%, 68%);
+    --royal-blue-dark: hsl(231, 61%, 22%);
+    --silver-chalice: hsl(0, 0%, 70%);
+    --oxford-blue: hsl(231, 100%, 8%);
+    --bittersweet: hsl(2, 100%, 69%);
+    --french-rose: hsl(342, 90%, 61%);
+    --davys-gray: hsl(180, 3%, 28%);
+    --cool-gray: hsl(240, 13%, 62%);
+    --platinum: hsl(0, 0%, 92%);
+    --white-2: hsl(0, 0%, 98%);
+    --white: hsl(0, 0%, 100%);
+    --black: hsl(0, 0%, 0%);
+    --rythm: hsl(240, 9%, 53%);
+  
+    /**
+     * typography
+     */
+  
+    --ff-poppins: "Poppins", sans-sarif;
+  
+    --fs-1: 32px;
+    --fs-2: 26px;
+    --fs-3: 22px;
+    --fs-4: 18px;
+    --fs-5: 15px;
+    --fs-6: 14px;
+  
+    --fw-700: 700;
+    --fw-600: 600;
+    --fw-500: 500;
+  
+    /**
+     * transition
+     */
+  
+    --transition: 0.25s ease-in-out;
+  
+  }
+  
+  
+  
+  
+  
+  /*-----------------------------------*\ 
+   * #RESET
+  \*-----------------------------------*/
+  
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  li { list-style: none; }
+  
+  a { text-decoration: none; }
+  
+  a,
+  img,
+  button,
+  span,
+  ion-icon,
+  label,
+  input,
+  textarea { display: block; }
+  
+  button {
+    font: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  textarea,
+  input {
+    font: inherit;
+    background: none;
+    border: none;
+    width: 100%;
+  }
+  
+  :is(input, textarea):focus { outline: none; }
+  
+  :focus { outline-offset: 4px; }
+  
+  html {
+    font-family: var(--ff-poppins);
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background: var(--white);
+    overflow-x: hidden;
+  }
+  
+  ::-webkit-scrollbar { width: 10px; }
+  
+  ::-webkit-scrollbar-track { background: var(--white); }
+  
+  ::-webkit-scrollbar-thumb { background: hsl(0, 0%, 50%); }
+  
+  
+  .container { padding: 0 15px; }
+  
+  .h1,
+  .h2,
+  .h3 {
+    font-weight: var(--fw-600);
+    line-height: 1.3;
+    text-transform: capitalize;
+  }
+  
+  .h1 {
+    color: var(--oxford-blue);
+    font-size: var(--fs-1);
+  }
+  
+  .h2 { font-size: var(--fs-2); }
+  
+  .h3 {
+    color: var(--oxford-blue);
+    font-size: var(--fs-3);
+  }
+  
+  .h4 {
+    color: var(--royal-blue-dark);
+    font-size: var(--fs-5);
+    font-weight: var(--fw-600);
+  }
+  
+  .btn {
+    font-size: var(--fs-6);
+    text-transform: uppercase;
+    font-weight: var(--fw-600);
+    border-radius: 6px;
+  }
+  
+  .btn-primary {
+    color: var(--bittersweet);
+  }
+  
+  .btn-primary:is(:hover, :focus) { --bittersweet: hsl(2, 90%, 65%); }
+  
+  .btn-secondary:is(:hover, :focus) { background: hsla(0, 0%, 100%, 0.1); }
+  
+  
+  
+  
+  
+  /*-----------------------------------*\ 
+   * #HEADER
+  \*-----------------------------------*/
+  
+  header {
+    position: relative;
+    padding: 35px 0;
+    z-index: 2;
+  }
+  
+  header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar-menu-btn {
+    font-size: 30px;
+    padding: 5px;
+  }
+  
+  .navbar {
+    position: absolute;
+    top: calc(100% - 15px);
+    left: 15px;
+    right: 15px;
+    background: var(--maximum-yellow-red);
+    max-height: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: var(--transition);
+    transform-origin: top;
+    overflow: hidden;
+  }
+  
+  .navbar.active {
+    visibility: visible;
+    pointer-events: all;
+    max-height: 280px;
+  }
+  
+  .navbar-list { padding: 10px; }
+  
+  .nav-item:not(:last-child) { border-bottom: 1px solid hsla(0, 0%, 100%, 0.2); }
+  
+  .nav-link {
+    font-size: var(--fs-6);
+    color: var(--royal-blue-dark);
+    font-weight: var(--fw-600);
+    padding: 15px 10px;
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  
+  .nav-link:is(:hover, :focus) { background: hsla(0, 0%, 100%, 0.2); }
+  
+  .navbar.active .nav-link {
+    transition-delay: 0.2s;
+    opacity: 1;
+  }
+  
+  .navbar .btn-primary { display: none; }
+  
+  
+  
