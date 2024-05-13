@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Report</title>
+</head>
+
+<body>
+    <h1>User Report</h1>
+    
+    <h2>Finished Tasks:</h2>
+    <ul>
+        <!-- Iterate over the finished tasks and display them -->
+        <li th:each="task : ${finishedTasks}" th:text="${task.description}"></li>
+    </ul>
+    
+    <h2>Discount:</h2>
+    <p>
+       
+        You have earned a <span th:text="${#strings.replace(discountPercentage, '.00', '')}"></span>% discount.
+    </p>
+    
+    <p>
+        <span th:if="${discountPercentage > 0}">
+            Congratulations! You qualify for a discount on your next purchase.
+        </span>
+        <span th:else>
+            Keep up the good work! Continue completing tasks to earn discounts.
+        </span>
+    </p>
+</body>
+
+</html>
