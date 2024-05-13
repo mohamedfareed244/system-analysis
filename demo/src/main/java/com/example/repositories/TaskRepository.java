@@ -12,6 +12,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByUser(User user);
 
+    List<Task> findByUserAndFinishedTrue(User user);
+
     // void updateTask(Long taskId, Task updatedTask);
 
     // Object getAllTasks();

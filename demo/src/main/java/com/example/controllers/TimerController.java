@@ -109,6 +109,20 @@ public class TimerController {
         
         return mav;
     }
+    @GetMapping("/finished-tasks")
+    public ModelAndView getFinishedTasks(HttpSession session) {
+        ModelAndView mav = new ModelAndView("finished-tasks.html");
+        User user = (User) session.getAttribute("user");
+        
+        if (user == null) {
+            mav.setViewName("redirect:/login");
+            return mav;
+        } else {
+            List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
+            mav.addObject("finishedTasks", finishedTasks);
+            return mav;
+        }
+    }
     
     @GetMapping("/timer")
     public String getTimerPage(Model model, HttpSession session) {
