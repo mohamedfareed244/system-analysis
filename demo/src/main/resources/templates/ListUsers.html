@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,13 +31,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Data 1</td>
-                                <td>Data 2</td>
-                                <td>Data 3</td>
-                                <td>Data 4</td>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.name}"></td>
+                                <td th:text="${user.phonenumber}"></td>
+                                <td th:text="${user.username}"></td>
+                                
                             </tr>
-                            <!-- Add more rows as needed -->
                         </tbody>
                     </table>
                     
