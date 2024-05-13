@@ -92,6 +92,23 @@ public class TimerController {
      }
     }
 
+    @GetMapping("/profile")
+    public ModelAndView viewProfile(HttpSession session) {
+        ModelAndView mav = new ModelAndView("profile.html");
+        User user = (User) session.getAttribute("user");
+        
+        if (user == null) {
+            mav.setViewName("redirect:/login");
+            return mav;
+        }
+
+        mav.addObject("id", user.getId());
+        mav.addObject("username", user.getUsername());
+        mav.addObject("name", user.getName());
+        mav.addObject("phonenumber", user.getPhonenumber());
+        
+        return mav;
+    }
     
     @GetMapping("/timer")
     public String getTimerPage(Model model, HttpSession session) {
