@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-    margin-top: 100px; /* Adjust this value as needed */
+    margin-top:auto ; /* Adjust this value as needed */
     margin-right: auto;
     margin-bottom: 70px; /* Adjust this value as needed */
     margin-left: auto;
@@ -22,7 +22,7 @@ body {
 .timer-container {
     text-align: center;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: auto ;
   
 }
 
