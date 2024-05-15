@@ -1,0 +1,215 @@
+<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	<!-- <link rel="stylesheet" href="/css/admin/addDoctor.css"> -->
+    <link rel="stylesheet" href="adminSidebar.css">
+    <link rel="icon" href="/images/logo.png" type="image/icon type" />
+
+
+	<title>Mandala AdminHub</title>
+</head>
+
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a th:href="@{/admin/profile}" class="brand">
+			<i class='bx bxs-smile'></i>
+			<span class="text">Mandala Admin</span>
+		</a>
+		<ul class="side-menu top">
+			<li class="active">
+				<a th:href="@{/admin/index}">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/profile}">
+					<i class='bx bxs-user'></i>
+					<span class="text">Profile</span>
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/rewards}">
+					<i class='bx bxs-gift'></i>
+					<span class="text">Rewards</span>
+				
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/discounts}">
+					<i class='bx bxs-discount'></i>
+					<span class="text">Discounts</span>
+					
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/users}">
+					<i class='bx bxs-group'></i>
+					<span class="text">Users</span>
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/reviews}">
+					<i class='bx bxs-bar-chart-alt-2'></i>
+					<span class="text">Reviews</span>
+				</a>
+			</li>
+			<li>
+				<a th:href="@{/admin/list}">
+					<i class='bx bxs-group'></i>
+					<span class="text">Admins</span>
+				</a>
+			</li>
+			<!-- <li>
+				<a th:href="@{/admin/addDoctor}">
+					<i class='bx bxs-file-plus'></i>
+					<span class="text">Add Users</span>
+				</a>
+			</li> -->
+			<li>
+				<a th:href="@{/admin/addAdmin}">
+					<i class='bx bxs-user-plus'></i>
+					<span class="text">Add Admin</span>
+				</a>
+			</li>
+			<!-- <li>
+				<a th:href="@{/admin/pets}">
+					<i class='bx bx-plus-medical'></i>
+					<span class="text">Pets</span>
+				</a>
+			</li> -->
+		</ul>
+		<ul class="side-menu">
+			<!-- <li>
+				<a href="#">
+					<i class='bx bxs-cog'></i>
+					<span class="text">Settings</span>
+				</a>
+			</li> -->
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle'></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<!-- <nav>
+			<i class='bx bx-menu'></i>
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn" title="submit"><i class='bx bx-search'></i></button>
+				</div>
+			</form>
+			 <a href="profileAdmin.html" class="profile"> profile icon
+				<img src="/static/images/profile.jpg" alt="profile">
+			</a> -->
+		<!-- </nav> --> 
+		<!-- NAVBAR -->
+		
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<!-- <ul class="breadcrumb">
+						<li>
+							<a href="index.html">Dashboard</a>
+						</li>		
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li>
+							<a class="active" href="#">Home</a>
+						</li>
+					</ul> -->
+				</div>
+			</div>
+
+			<ul class="box-info">
+				<!-- <li>
+					<i class='bx bxs-calendar-check'></i>
+					<span class="text">
+						<h3>50</h3>
+						<p>New Appointments</p>
+					</span>
+				</li> -->
+				<li>
+					<i class='bx bxs-group'></i>
+					<span class="text">
+						<h3>2834</h3>
+						<p>Users</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-dollar-circle'></i>
+					<span class="text">
+						<h3>$2543</h3>
+						<p>Total Sales</p>
+					</span>
+				</li>
+			</ul>
+
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Pomodoro Leadboard</h3>
+						<!-- <i class='bx bx-search'></i>
+						<i class='bx bx-filter'></i> -->
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Time Accomplished</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+							</tr>
+							<tr>
+								<td>
+									
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+							</tr>
+							<tr>
+								<td>
+								
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+	
+</body>
+
+</html>
