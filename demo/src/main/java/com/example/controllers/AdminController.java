@@ -17,11 +17,15 @@ public class AdminController {
     @Autowired
     UserRepository user_repo;
 
+    @GetMapping("")
+    public ModelAndView Getindex(){
+           ModelAndView newmodel=new ModelAndView("/admin/sidebar");
+        return newmodel;
+    }
     @GetMapping("/listusers")
     public ModelAndView GetAllUsers(){
            ModelAndView newmodel=new ModelAndView("ListUsers");
         newmodel.addObject("users", user_repo.findAll());
-       
         return newmodel;
     }
 
