@@ -97,18 +97,18 @@
 			
 				</div>
 			</div>
-            <form th:action="@{/Admin/signup}" th:object="${NewUser}" method="post">
+            <form th:action="@{/Admin/addadmin}" th:object="${NewUser}" method="post">
                 <div class="form-group">
                     <label for="username"><i class='bx bx-user'></i> Name:</label>
                     <input type="text" id="username" name="username" required th:field="*{Name}">
                 </div>
                 <div class="form-group">
-                    <label for="username"><i class='bx bx-user'></i> UserName:</label>
-                    <input type="text" id="name" name="name" required th:field="*{UserName}">
+                    <label for="email"><i class='bx bx-user'></i> UserName:</label>
+                    <input type="email" id="email" name="email" required th:field="*{UserName}">
                 </div>
                 <div class="form-group">
-                    <label for="email"><i class='bx bx-phone'></i> Phone:</label>
-                    <input type="email" id="email" name="email" required th:field="*{Phone}">
+                    <label for="phone"><i class='bx bx-phone'></i> Phone:</label>
+                    <input type="text" id="phone" name="phone" required th:field="*{Phone}">
                 </div>
                 <div class="form-group">
                     <label for="password"><i class='bx bx-lock'></i> Password:</label>

@@ -2,10 +2,13 @@ package com.example.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.models.Admin;
 import com.example.repositories.AdminRepository;
@@ -46,5 +49,12 @@ public class AdminController {
         ModelAndView mav=new ModelAndView("/admin/AddAdmin");
         mav.addObject("NewUser", newadmin);
         return mav;
+    }
+
+    @PostMapping ("/addadmin")
+    public RedirectView AddAdmin(@ModelAttribute("NewUser") Admin newone){
+   adminrepo.save(newone);
+        RedirectView Rv=new RedirectView("/Admin/listadmins");
+        return Rv;
     }
 }
