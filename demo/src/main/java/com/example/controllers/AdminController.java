@@ -5,9 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.ModelAndViewDefiningException;
 
+import com.example.models.Admin;
 import com.example.repositories.AdminRepository;
 import com.example.repositories.UserRepository;
+
+import ch.qos.logback.core.model.Model;
 
 @RestController
 @RequestMapping("/Admin")
@@ -35,5 +39,12 @@ public class AdminController {
         newmodel.addObject("admins", adminrepo.findAll());
       
         return newmodel;
+    }
+    @GetMapping("/addadmin")
+    public ModelAndView GetAddAminPage(){
+        Admin newadmin=new Admin();
+        ModelAndView mav=new ModelAndView("/admin/AddAdmin");
+        mav.addObject("NewUser", newadmin);
+        return mav;
     }
 }

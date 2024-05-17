@@ -11,7 +11,62 @@
     <link rel="icon" href="/images/logo.png" type="image/icon type" />
     <title>All users </title>
     <title>All Admins</title>
-
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div th:replace="~{/admin/sidebar :: sidebar}"></div>
@@ -38,42 +93,31 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>All Admins</h1>
+					<h1>Add Admins</h1>
 			
 				</div>
 			</div>
-
+            <form action="/signup" method="post">
+                <div class="form-group">
+                    <label for="username"><i class='bx bx-user'></i> Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="username"><i class='bx bx-user'></i> name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class='bx bx-envelope'></i> Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class='bx bx-lock'></i> Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit"><i class='bx bx-user-plus'></i> Add The Admin</button>
+            </form>
 		
 
-
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Pomodoro All Admins </h3>
-						<!-- <i class='bx bx-search'></i>
-						<i class='bx bx-filter'></i> -->
-					</div>
-					<table>
-						<thead>
-							<tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-                            <tr th:each="admin : ${admins}">
-                                <td th:text="${admin.Id}"></td>
-                                <td th:text="${admin.Name}"></td>
-                                <td th:text="${admin.Phone}"></td>
-                                <td th:text="${admin.UserName}"></td>
-                                
-                            </tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 		</main>
 		<!-- MAIN -->
 	</section>
