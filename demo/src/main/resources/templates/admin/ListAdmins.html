@@ -4,33 +4,65 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="/css/listusers.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	<link rel="stylesheet" href="/css/admin/adminSidebar.css">
+
+    <link rel="icon" href="/images/logo.png" type="image/icon type" />
+    <title>All users </title>
     <title>All Admins</title>
 
 </head>
 <body>
+    <div th:replace="~{/admin/sidebar :: sidebar}"></div>
   
-        <div id="sidebar">
-            <ul id="sidebarul">
-                <li> List All Users </li>
-                <hr>
-                <li> List All Admins  </li>
-                <hr>
-                <li> Admins Access </li>
-            </ul>
-                </div>
+    <section id="content">
+		<!-- NAVBAR -->
+		<!-- <nav>
+			<i class='bx bx-menu'></i>
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn" title="submit"><i class='bx bx-search'></i></button>
+				</div>
+			</form>
+			 <a href="profileAdmin.html" class="profile"> profile icon
+				<img src="/static/images/profile.jpg" alt="profile">
+			</a> -->
+		<!-- </nav> --> 
+		<!-- NAVBAR -->
+		
 
-                <div id="content-div">
-                    <table>
-                        <thead>
-                            <tr>
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>All Admins</h1>
+			
+				</div>
+			</div>
+
+		
+
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Pomodoro All Admins </h3>
+						<!-- <i class='bx bx-search'></i>
+						<i class='bx bx-filter'></i> -->
+					</div>
+					<table>
+						<thead>
+							<tr>
                                 <th>Id</th>
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Username</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+							</tr>
+						</thead>
+						<tbody>
                             <tr th:each="admin : ${admins}">
                                 <td th:text="${admin.Id}"></td>
                                 <td th:text="${admin.Name}"></td>
@@ -38,10 +70,18 @@
                                 <td th:text="${admin.UserName}"></td>
                                 
                             </tr>
-                        </tbody>
-                    </table>
-                    
-                </div>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+
+
+
+
+
 
    
    
