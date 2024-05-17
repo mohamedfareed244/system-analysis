@@ -24,14 +24,14 @@ public class AdminController {
     }
     @GetMapping("/listusers")
     public ModelAndView GetAllUsers(){
-           ModelAndView newmodel=new ModelAndView("ListUsers");
+           ModelAndView newmodel=new ModelAndView("/admin/ListUsers");
         newmodel.addObject("users", user_repo.findAll());
         return newmodel;
     }
 
     @GetMapping("/listadmins")
     public ModelAndView GetAllAdmins(){
-        ModelAndView newmodel=new ModelAndView("ListAdmins");
+        ModelAndView newmodel=new ModelAndView("/admin/ListAdmins");
         newmodel.addObject("admins", adminrepo.findAll());
       
         return newmodel;
