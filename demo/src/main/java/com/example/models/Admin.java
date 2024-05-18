@@ -12,29 +12,29 @@ import java.util.Objects;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int Id;
+    private Long Id;
 
     private String Name ;
     private String Phone;
     private String Password;
-    private String UserName;
+    private String userName; 
 
     public Admin() {
     }
 
-    public Admin(int Id, String Name, String Phone, String Password, String UserName) {
+    public Admin(Long Id, String Name, String Phone, String Password, String userName) {
         this.Id = Id;
         this.Name = Name;
         this.Phone = Phone;
         this.Password = Password;
-        this.UserName = UserName;
+        this.userName = userName;
     }
 
-    public int getId() {
+    public Long getId() {
         return this.Id;
     }
 
-    public void setId(int Id) {
+    public void setId(Long Id) {
         this.Id = Id;
     }
 
@@ -62,15 +62,15 @@ public class Admin {
         this.Password = Password;
     }
 
-    public String getUserName() {
-        return this.UserName;
+    public String getuserName() {
+        return this.userName;
     }
 
-    public void setUserName(String UserName) {
-        this.UserName = UserName;
+    public void setuserName(String userName) {
+        this.userName = userName;
     }
 
-    public Admin Id(int Id) {
+    public Admin Id(Long Id) {
         setId(Id);
         return this;
     }
@@ -90,8 +90,8 @@ public class Admin {
         return this;
     }
 
-    public Admin UserName(String UserName) {
-        setUserName(UserName);
+    public Admin userName(String userName) {
+        setuserName(userName);
         return this;
     }
 
@@ -103,12 +103,12 @@ public class Admin {
             return false;
         }
         Admin admin = (Admin) o;
-        return Id == admin.Id && Objects.equals(Name, admin.Name) && Objects.equals(Phone, admin.Phone) && Objects.equals(Password, admin.Password) && Objects.equals(UserName, admin.UserName);
+        return Id == admin.Id && Objects.equals(Name, admin.Name) && Objects.equals(Phone, admin.Phone) && Objects.equals(Password, admin.Password) && Objects.equals(userName, admin.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, Name, Phone, Password, UserName);
+        return Objects.hash(Id, Name, Phone, Password, userName);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class Admin {
             ", Name='" + getName() + "'" +
             ", Phone='" + getPhone() + "'" +
             ", Password='" + getPassword() + "'" +
-            ", UserName='" + getUserName() + "'" +
+            ", userName='" + getuserName() + "'" +
             "}";
     }
 }

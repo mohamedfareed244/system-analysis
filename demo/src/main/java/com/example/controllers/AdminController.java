@@ -15,6 +15,7 @@ import com.example.repositories.AdminRepository;
 import com.example.repositories.UserRepository;
 
 import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/Admin")
@@ -26,7 +27,7 @@ public class AdminController {
 
     @GetMapping("")
     public ModelAndView Getindex(){
-           ModelAndView newmodel=new ModelAndView("/admin/sidebar");
+           ModelAndView newmodel=new ModelAndView("/admin/adminProfile");
         return newmodel;
     }
     @GetMapping("/listusers")
@@ -57,4 +58,26 @@ public class AdminController {
         RedirectView Rv=new RedirectView("/Admin/listadmins");
         return Rv;
     }
+
+@GetMapping("/adminProfile")
+public ModelAndView ProfileDetails(HttpSession session) {
+    ModelAndView mav = new ModelAndView("/admin/adminProfile");
+    String username = (String) session.getAttribute("Username");
+    if (username != null) {
+        Admin admin = adminrepo.findByUserName(username);
+        if (admin!= null) {
+            mav.addObject("userId", admin.getId());
+            mav.addObject("name", admin.getName());
+            mav.addObject("phone", admin.getPhone());
+            mav.addObject("username", admin.getuserName());
+          
+           
+        }
+    }
+    return mav;
+}
+
+
+
+
 }
