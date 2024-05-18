@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/css/admin/adminSidebar.css">
+
+    <link rel="icon" href="/images/logo.png" type="image/icon type" />
+    <title>Rewards</title>
+</head>
+<body>
+    <div th:replace="~{/admin/sidebar :: sidebar}"></div>
+  
+    <section id="content">
+       
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Rewards</h1>
+                </div>
+            </div>
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Rewards</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Number of Task(s)</th>
+                                <th>Reward</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reward : ${rewards}">
+                                <td th:text="${reward.Id}"></td>
+                                <td th:text="${reward.taskCondition}"></td>
+                                <td th:text="${reward.Reward}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+</body>
+</html>
