@@ -77,7 +77,13 @@ public ModelAndView ProfileDetails(HttpSession session) {
     return mav;
 }
 
-
+@GetMapping("/logout")
+public RedirectView logout(HttpSession session) {
+   
+    session.invalidate();
+   
+    return new RedirectView("/login");
+}
 
 
 }
