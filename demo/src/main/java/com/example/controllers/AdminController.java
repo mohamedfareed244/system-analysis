@@ -95,23 +95,29 @@ public RedirectView logout(HttpSession session) {
     return new RedirectView("/login");
 }
 @GetMapping("/Rewards")
-    public ModelAndView getRewardsPage() {
-        ModelAndView mav = new ModelAndView("/admin/Rewards");
-        List<Rewards> rewardsList = reward_repo.findAll();
-        mav.addObject("rewards", rewardsList);
-        return mav;
-    }
+public ModelAndView getRewardsPage() {
+    ModelAndView mav = new ModelAndView("/admin/Rewards");
+    List<Rewards> rewardsList = reward_repo.findAll();
+    mav.addObject("rewards", rewardsList);
+    return mav;
+}
 
-    @GetMapping("/addRewardPage")
+@GetMapping("/addReward")
     public ModelAndView getAddRewardPage() {
         ModelAndView mav = new ModelAndView("/admin/addReward");
         mav.addObject("reward", new Rewards());
         return mav;
     }
 
+    @PostMapping("/addReward")
+    public RedirectView addReward(@ModelAttribute Rewards reward) {
+        reward_repo.save(reward);
+        return new RedirectView("/Admin/Rewards");
+    }
+
     @GetMapping("/editReward")
     public ModelAndView getEditRewardPage(@RequestParam("id") Long id) {
-        ModelAndView mav = new ModelAndView("/admin/addReward");
+        ModelAndView mav = new ModelAndView("/admin/editReward");
         Optional<Rewards> reward = reward_repo.findById(id);
         if (reward.isPresent()) {
             mav.addObject("reward", reward.get());
@@ -119,8 +125,8 @@ public RedirectView logout(HttpSession session) {
         return mav;
     }
 
-    @PostMapping("/saveReward")
-    public RedirectView saveReward(@ModelAttribute("reward") Rewards reward) {
+    @PostMapping("/editReward")
+    public RedirectView editReward(@ModelAttribute Rewards reward) {
         reward_repo.save(reward);
         return new RedirectView("/Admin/Rewards");
     }
@@ -130,8 +136,6 @@ public RedirectView logout(HttpSession session) {
         reward_repo.deleteById(id);
         return new RedirectView("/Admin/Rewards");
     }
-
-
 
 
 private double calculateDiscountPercentage(int totalFinishedTasks) {

@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Rewards {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     private String taskCondition;
     private String Reward;

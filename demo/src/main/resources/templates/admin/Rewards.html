@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- My CSS -->
     <link rel="stylesheet" href="/css/admin/adminSidebar.css">
     <link rel="icon" href="/images/logo.png" type="image/icon type" />
     <title>Rewards</title>
@@ -26,6 +25,7 @@
                 <div class="order">
                     <div class="head">
                         <h3>Rewards</h3>
+                        
                     </div>
                     <table>
                         <thead>
@@ -39,22 +39,19 @@
                         <tbody>
                             <tr th:each="reward : ${rewards}">
                                 <td th:text="${reward.id}"></td>
-                                <td th:text="${reward.reward}"></td>
                                 <td th:text="${reward.taskCondition}"></td>
-                                
+                                <td th:text="${reward.reward}"></td>
                                 <td>
-                                    <a th:href="@{/Admin/editReward(id=${reward.id})}">Edit</a>
-                                    <a th:href="@{/Admin/deleteReward(id=${reward.id})}">Delete</a>
+                                    <a th:href="@{/Admin/editReward(id=${reward.id})}" class="btn-edit">Edit</a>
+                                    <a th:href="@{/Admin/deleteReward(id=${reward.id})}" class="btn-delete">Delete</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                  
                 </div>
             </div>
-
-            <div>
-                <a href="/Admin/addReward">Add Reward</a>
-            </div>
+            <a th:href="@{/Admin/addReward}" class="btn-add">Add Reward</a>
         </main>
         <!-- MAIN -->
     </section>
