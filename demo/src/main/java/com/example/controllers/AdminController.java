@@ -73,6 +73,12 @@ public class AdminController {
         RedirectView Rv=new RedirectView("/Admin/listadmins");
         return Rv;
     }
+
+    @GetMapping("/deleteAdmin")
+    public RedirectView deleteAdmin(@RequestParam("id") Long id) {
+        adminrepo.deleteById(id);
+        return new RedirectView("/Admin/listadmins");
+    }
     
     @GetMapping("/login")
     public ModelAndView login() {
