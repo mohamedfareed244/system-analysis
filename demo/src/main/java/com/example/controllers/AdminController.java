@@ -67,58 +67,56 @@ public class AdminController {
 
     @PostMapping ("/addadmin")
     public RedirectView AddAdmin(@ModelAttribute("NewUser") Admin newone){
-   adminrepo.save(newone);
+        String hashedPassword = BCrypt.hashpw(newone.getPassword(), BCrypt.gensalt());
+        newone.setPassword(hashedPassword);
+        adminrepo.save(newone);
         RedirectView Rv=new RedirectView("/Admin/listadmins");
         return Rv;
     }
 
-@GetMapping("/adminProfile")
-public ModelAndView ProfileDetails(HttpSession session) {
-    ModelAndView mav = new ModelAndView("/admin/adminProfile");
-    String username = (String) session.getAttribute("Username");
-    if (username != null) {
-        Admin admin = adminrepo.findByUserName(username);
-        if (admin!= null) {
-            mav.addObject("userId", admin.getId());
-            mav.addObject("name", admin.getName());
-            mav.addObject("phone", admin.getPhone());
-            mav.addObject("username", admin.getuserName());
-          
-           
-        }
+    @GetMapping("/login")
+    public ModelAndView login() {
+        ModelAndView mav = new ModelAndView("/admin/adminLogin");
+        mav.addObject("admin", new Admin());
+        return mav;
     }
-    return mav;
-}
 
-@GetMapping("/login")
-public ModelAndView login() {
-    ModelAndView mav = new ModelAndView("/admin/adminLogin");
-    mav.addObject("admin", new Admin());
-    return mav;
-}
-
-     @PostMapping("Login")
+    @PostMapping("/login")
     public RedirectView loginProcess(@RequestParam("username") String username, 
                                      @RequestParam("password") String password, 
                                      HttpSession session,
                                      RedirectAttributes redirectAttributes) {
         Admin admin = adminrepo.findByUserName(username);
         if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
-            session.setAttribute("username", username);
-            return new RedirectView("Admin/adminProfile");
+            session.setAttribute("UserName", username); 
+            return new RedirectView("/Admin/adminProfile");
         } else {
             redirectAttributes.addFlashAttribute("error", "Invalid username or password");
-            return new RedirectView("Admin/login");
+            return new RedirectView("/Admin/login");
         }
     }
 
-@GetMapping("/logout")
-public RedirectView logout(HttpSession session) {
-   
-    session.invalidate();
-   
-    return new RedirectView("/Admin/login");
-}
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/Admin/login");
+    }
+
+    @GetMapping("/adminProfile")
+    public ModelAndView ProfileDetails(HttpSession session) {
+        ModelAndView mav = new ModelAndView("/admin/adminProfile");
+        String username = (String) session.getAttribute("UserName");
+        if (username != null) {
+            Admin admin = adminrepo.findByUserName(username);
+            if (admin != null) {
+                mav.addObject("userId", admin.getId());
+                mav.addObject("name", admin.getName());
+                mav.addObject("phone", admin.getPhone());
+                mav.addObject("username", admin.getuserName());
+            }
+        }
+        return mav;
+    }
 @GetMapping("/Rewards")
 public ModelAndView getRewardsPage() {
     ModelAndView mav = new ModelAndView("/admin/Rewards");
