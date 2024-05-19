@@ -15,10 +15,12 @@
   <div class="navbar">
     <div class="navbar-brand">MANDALA</div>
     <ul class="navbar-nav">
-        <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Services</a></li>
+        <li class="nav-item"><a href="/user/index" class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Profile</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Finished Tasks</a></li>
+         <li class="nav-item"><a href="#" class="nav-link">Your-Report</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
     </ul>
 </div>
 
@@ -62,14 +64,14 @@
                         <tr id="task-1" th:each="task: ${tasks}" th:class="${task.finished}?'finished-task':''">
                             <td th:text="${task.description}"></td>
                             <td>
-                                <form th:action="@{/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
+                                <form th:action="@{/user/timer/editTask/{taskId}(taskId=${task.id})}" method="post">
                                     <input type="text" name="description" th:value="${task.description}" required title="input" class="oval-input">
                                     <button type="submit" class="oval-button">Edit</button>
                                 </form>
-                                <form th:action="@{/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
+                                <form th:action="@{/user/timer/deleteTask/{taskId}(taskId=${task.id})}" method="post">
                                     <button type="submit" class="oval-button">Delete</button>
                                 </form>
-                                <form th:action="@{/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" >
+                                <form th:action="@{/user/timer/finishTask/{taskId}(taskId=${task.id})}" method="post" >
                                     <button type="submit" class="finish-button oval-button" data-task-id="${task.id}">Finish</button>
                                 </form>
                             </td>
@@ -79,7 +81,7 @@
             </div>
             <div class="add-task-box">
                 <h3>Add Task</h3>
-                <form action="/timer/addTask" method="post">
+                <form action="/user/timer/addTask" method="post">
                     <input type="text" name="description" required title="input" class="oval-input">
                     <button type="submit" class="oval-button">Add Task</button>
                 </form>
