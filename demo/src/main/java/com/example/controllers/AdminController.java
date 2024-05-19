@@ -73,7 +73,7 @@ public class AdminController {
         RedirectView Rv=new RedirectView("/Admin/listadmins");
         return Rv;
     }
-
+    
     @GetMapping("/login")
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView("/admin/adminLogin");
@@ -81,17 +81,14 @@ public class AdminController {
         return mav;
     }
 
+    
     @PostMapping("/login")
-    public RedirectView loginProcess(@RequestParam("username") String username, 
-                                     @RequestParam("password") String password, 
-                                     HttpSession session,
-                                     RedirectAttributes redirectAttributes) {
+    public RedirectView loginProgress(@RequestParam("username") String username, @RequestParam("password") String password,HttpSession session) {
         Admin admin = adminrepo.findByUserName(username);
         if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
             session.setAttribute("UserName", username); 
             return new RedirectView("/Admin/adminProfile");
         } else {
-            redirectAttributes.addFlashAttribute("error", "Invalid username or password");
             return new RedirectView("/Admin/login");
         }
     }
