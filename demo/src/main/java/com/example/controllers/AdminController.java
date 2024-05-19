@@ -2,12 +2,14 @@ package com.example.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
@@ -93,21 +95,44 @@ public RedirectView logout(HttpSession session) {
     return new RedirectView("/login");
 }
 @GetMapping("/Rewards")
-public ModelAndView getRewardsPage() {
-     
-    ModelAndView mav = new ModelAndView("/admin/Rewards");
-
-    List<Rewards> rewardsList = reward_repo.findAll();
-    if (rewardsList.isEmpty()) {
-        rewardsList.add(new Rewards(1L, "Tasks More Than Or Equal Ten", "10%"));
-        rewardsList.add(new Rewards(2L, "Tasks More Than Or Equal Five", "5%"));
-        rewardsList.add(new Rewards(3L, "Tasks Less Than Five", "0%"));
+    public ModelAndView getRewardsPage() {
+        ModelAndView mav = new ModelAndView("/admin/Rewards");
+        List<Rewards> rewardsList = reward_repo.findAll();
+        mav.addObject("rewards", rewardsList);
+        return mav;
     }
 
-    mav.addObject("rewards", rewardsList);
-    return mav;
+    @GetMapping("/addRewardPage")
+    public ModelAndView getAddRewardPage() {
+        ModelAndView mav = new ModelAndView("/admin/addReward");
+        mav.addObject("reward", new Rewards());
+        return mav;
+    }
 
-}
+    @GetMapping("/editReward")
+    public ModelAndView getEditRewardPage(@RequestParam("id") Long id) {
+        ModelAndView mav = new ModelAndView("/admin/addReward");
+        Optional<Rewards> reward = reward_repo.findById(id);
+        if (reward.isPresent()) {
+            mav.addObject("reward", reward.get());
+        }
+        return mav;
+    }
+
+    @PostMapping("/saveReward")
+    public RedirectView saveReward(@ModelAttribute("reward") Rewards reward) {
+        reward_repo.save(reward);
+        return new RedirectView("/Admin/Rewards");
+    }
+
+    @GetMapping("/deleteReward")
+    public RedirectView deleteReward(@RequestParam("id") Long id) {
+        reward_repo.deleteById(id);
+        return new RedirectView("/Admin/Rewards");
+    }
+
+
+
 
 private double calculateDiscountPercentage(int totalFinishedTasks) {
 
