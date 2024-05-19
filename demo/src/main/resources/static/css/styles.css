@@ -101,10 +101,11 @@ body {
     text-decoration: line-through;
 }
 
-.navbar {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
+ /* Add your navigation bar CSS styles here */
+ .navbar {
+    /* Set your desired background color */
+    color:#000000; /* Set text color */
+    padding: 10px 25px; /* Adjust padding as needed */
     display: flex;
     justify-content: space-between;
     align-items: center;

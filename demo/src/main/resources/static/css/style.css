@@ -93,6 +93,7 @@ input {
 html {
   font-family: var(--ff-poppins);
   scroll-behavior: smooth;
+  
 }
 
 body {
