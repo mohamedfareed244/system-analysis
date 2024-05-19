@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -88,7 +89,7 @@ public class AdminController {
     @PostMapping("/login")
     public RedirectView loginProgress(@RequestParam("username") String username, @RequestParam("password") String password,HttpSession session) {
         Admin admin = adminrepo.findByUserName(username);
-        if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
+        if (admin != null && BCyrpt.checkpw(password, admin.getPassword())) {
             session.setAttribute("UserName", username); 
             recentLogins.add(username);
             return new RedirectView("/Admin/adminProfile");
