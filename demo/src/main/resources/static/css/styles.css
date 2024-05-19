@@ -1,37 +1,35 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
-    
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .container {
-   
-    /* max-width: 1200px; */
-    
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    flex: 1;
+    padding: 20px;
+    margin: auto;
 }
 
 .timer-container {
     text-align: center;
-    margin-bottom: 20px;
-    margin-top: 400px;
-  
+    margin: auto;
+    /* margin-bottom: 20px;
+    margin-top: 50px; */
 }
 
 .timer-circle {
     width: 200px;
     height: 200px;
-    /* max-width: ; */
     background-color: #ffcccc;
     border-radius: 50%;
-    margin: 0 auto 20px;
-    /* padding-top: 100px;
-    margin-top: 100px;
-    margin-bottom: 100px; */
+    margin: 0 auto ;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -56,24 +54,23 @@ body {
 }
 
 .tasks-container {
-    
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 70px;
+    margin-top: 20px;
+    width: 100%;
 }
 
-.tasks-box {
+.tasks-box, .add-task-box {
     background-color: #fff;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
     max-height: 300px;
-    width: 80%; /* Adjust width as needed */
-    margin-bottom: 20px; 
-    margin-top: 80px;
-    margin-left: 40px;
+    width: 45%;
+    margin: 10px;
 }
 
 .tasks-scroll table {
@@ -82,19 +79,6 @@ body {
 
 .tasks-scroll table th, .tasks-scroll table td {
     padding: 10px;
-}
-
-.add-task-box {
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-    max-height: 300px;
-    width: 80%; /* Adjust width as needed */
-    margin-bottom: 20px; 
-    margin-top: 80px;
-    margin-left: 40px;
 }
 
 .oval-input {
@@ -107,6 +91,9 @@ body {
 .oval-button {
     border-radius: 20px;
     background-color: #f3a8a8;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
 }
 
 .finished-task {
@@ -114,23 +101,21 @@ body {
     text-decoration: line-through;
 }
 
- /* Add your navigation bar CSS styles here */
- .navbar {
-    /* Set your desired background color */
-    color:#000000; /* Set text color */
-    padding: 10px 20px; /* Adjust padding as needed */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .navbar-brand {
-    font-family: "Permanent Marker", cursive;
-    font-size: 30px; /* Adjust font size as needed */
+    font-family: "Caveat", cursive;
+    font-size: 30px;
 }
 
 .navbar-nav {
-    
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -138,17 +123,85 @@ body {
 }
 
 .nav-item {
-    margin-left: 10px; /* Adjust spacing between items */
+    margin-left: 10px;
 }
 
 .nav-link {
-    color: hsl(231, 61%, 22%); /* Set link color */
+    color: hsl(231, 61%, 22%);
     text-decoration: none;
-    padding: 5px 10px; /* Adjust padding as needed */
+    padding: 5px 10px;
     border-radius: 5px;
-    transition: background-color 0.3s ease; /* Add smooth transition */
+    transition: background-color 0.3s ease;
 }
 
 .nav-link:hover {
-    background-color: #555; /* Change background color on hover */
+    background-color: #555;
+}
+
+.footer {
+    
+    background-color: #ccc6c6;
+    color: #e2dede;
+    /* padding: 20px 0; */
+    text-align: center;
+    width: 100%;
+    position:relative;
+    /* bottom: 0; */
+margin-bottom: 0px;
+
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.footer-content a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tasks-box, .add-task-box {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 24px;
+    }
+
+    .timer-circle {
+        width: 150px;
+        height: 150px;
+    }
+
+    .timer-circle span {
+        font-size: 18px;
+    }
+
+    .timer-controls button {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    .oval-input, .oval-button {
+        width: 100%;
+        margin: 5px 0;
+    }
 }
