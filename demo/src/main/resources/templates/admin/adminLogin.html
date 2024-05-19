@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User login</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" type="text/css" href="/css/forms.css" />
     <script>
         window.onload = function() {
@@ -12,7 +12,6 @@
             var passwordInput = document.getElementById('password');
 
             form.addEventListener('submit', function(event) {
-                // Prevent form submission if validation fails
                 if (!validateUsername(usernameInput.value) || !validatePassword(passwordInput.value)) {
                     event.preventDefault();
                     return false;
@@ -20,7 +19,6 @@
             });
 
             function validateUsername(username) {
-                // Check if username is not empty
                 if (username.trim() === '') {
                     alert('Please enter your username.');
                     return false;
@@ -29,7 +27,6 @@
             }
 
             function validatePassword(password) {
-                // Check if password is not empty
                 if (password.trim() === '') {
                     alert('Please enter your password.');
                     return false;
@@ -40,15 +37,15 @@
     </script>
 </head>
 <body>
-    <h1>User Login</h1>
-    <form action="/user/login" method="post" class="form-container">
+    <h1>Admin Login</h1>
+    <form action="/Admin/login" th:object="${admin}" method="post" class="form-container">
         <div class="form-group">
-            <label for="username">Email:</label>
-            <input type="text" class="oval-input"  id="username" name="username"  required>
+            <label for="username">Username:</label>
+            <input type="text" class="oval-input" id="username" name="username" required>
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" class="oval-input"  id="password" name="password"  required>
+            <input type="password" class="oval-input" id="password" name="password" required>
         </div>
         <div class="form-group">
             <button type="submit" class="btn-submit">Login</button>

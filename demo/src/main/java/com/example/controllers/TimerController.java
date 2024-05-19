@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/user")
 public class TimerController {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
@@ -36,7 +36,7 @@ public class TimerController {
         this.timerServiceRepository = timerServiceRepository;
     }
 
-    @GetMapping("")
+    @GetMapping("Home")
     public ModelAndView getData() {
         ModelAndView mav = new ModelAndView("landing");
         return mav;
@@ -62,9 +62,9 @@ public class TimerController {
         User user = userRepository.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
             session.setAttribute("user", user);
-            return "redirect:/timer";
+            return "redirect:/user/timer";
         }
-        return "redirect:/login";
+        return "redirect:/user/login";
     }
 
     @GetMapping("/signup")
@@ -79,7 +79,7 @@ public class TimerController {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             session.setAttribute("user", existingUser);
-            return "redirect:/signup";
+            return "redirect:/user/signup";
         }
 
         else {
@@ -93,7 +93,7 @@ public class TimerController {
 
             session.setAttribute("user", user);
 
-            return "redirect:/timer";
+            return "redirect:/user/timer";
         }
     }
 
@@ -103,7 +103,7 @@ public class TimerController {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            mav.setViewName("redirect:/login");
+            mav.setViewName("redirect:/user/login");
             return mav;
         }
 
@@ -121,7 +121,7 @@ public class TimerController {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            mav.setViewName("redirect:/login");
+            mav.setViewName("redirect:/user/login");
             return mav;
         } else {
             List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
@@ -136,7 +136,7 @@ public class TimerController {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            mav.setViewName("redirect:/login");
+            mav.setViewName("redirect:/user/login");
             return mav;
         } else {
             List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
@@ -170,7 +170,7 @@ public class TimerController {
     public String getTimerPage(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         } else {
             List<Task> tasks = taskRepository.findByUser(user);
             model.addAttribute("tasks", tasks);
@@ -187,28 +187,29 @@ public class TimerController {
 
         TimerService timerService = new TimerService();
         timerService.startTimer(focusDuration, breakDuration);
-        return "redirect:/timer";
+        return "redirect:/user/timer";
     }
 
     @PostMapping("/timer/stop")
     public String stopTimer() {
         TimerService timerService = new TimerService();
         timerService.stopTimer();
-        return "redirect:/timer";
+        return "redirect:/user/timer";
     }
 
     @PostMapping("/timer/reset")
     public String resetTimer() {
         TimerService timerService = new TimerService();
         timerService.resetTimer();
-        return "redirect:/timer";
+        return "redirect:/user/timer";
     }
 
     @PostMapping("/timer/startBreak")
     public String startBreak() {
         TimerService timerService = new TimerService();
         timerService.startBreak();
-        return "redirect:/timer";
+        return "redirect:/user/timer";
+
     }
 
     @PostMapping("/timer/addTask")
@@ -217,7 +218,8 @@ public class TimerController {
         tasks.setUser(user);
 
         taskRepository.save(tasks);
-        return "redirect:/timer";
+        return "redirect:/user/timer";
+
     }
 
     @GetMapping("/timer/editTask/{taskId}")
@@ -238,7 +240,8 @@ public class TimerController {
                     .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
             tasks.setDescription(updatedTask.getDescription());
             taskRepository.save(tasks);
-            return "redirect:/timer";
+            return "redirect:/user/timer";
+
         }
     }
 
@@ -247,7 +250,7 @@ public class TimerController {
         Task tasks = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
         taskRepository.delete(tasks);
-        return "redirect:/timer";
+        return "redirect:/user/timer";
     }
 
     @PostMapping("/timer/finishTask/{taskId}")
@@ -256,7 +259,7 @@ public class TimerController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
         tasks.setFinished(true);
         taskRepository.save(tasks);
-        return "redirect:/timer";
+        return "redirect:/user/timer";
     }
 
     // @PostMapping("/timer/editTask/{taskId}")

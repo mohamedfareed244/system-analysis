@@ -43,7 +43,10 @@
                                 <td th:text="${admin.Id}"></td>
                                 <td th:text="${admin.Name}"></td>
                                 <td th:text="${admin.Phone}"></td>
-                                <td th:text="${admin.userName}"></td>
+                                <td th:text="${admin.getuserName()}"></td>
+                                <td>
+                                    <a th:href="@{/Admin/deleteAdmin(id=${admin.id})}" class="btn-delete">Delete</a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
