@@ -86,13 +86,15 @@
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
     <scope>test</scope>
-</dependency>
+</dependency> 
+
+
 
 <!-- <dependency>
 <groupId>org.mindrot</groupId>
 <artifactId>jbcrypt</artifactId>
 <version>0.4</version>
-</dependency>   -->
+</dependency>      -->
 
 	</dependencies>
 
