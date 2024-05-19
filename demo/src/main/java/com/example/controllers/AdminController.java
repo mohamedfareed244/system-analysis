@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.models.Admin;
 import com.example.models.Rewards;
+import com.example.models.User;
 import com.example.repositories.AdminRepository;
 import com.example.repositories.RewardsRepository;
 import com.example.repositories.UserRepository;
@@ -67,7 +69,9 @@ public class AdminController {
 
     @PostMapping ("/addadmin")
     public RedirectView AddAdmin(@ModelAttribute("NewUser") Admin newone){
-   adminrepo.save(newone);
+        String hashedPassword = BCrypt.hashpw(newone.getPassword(), BCrypt.gensalt());
+        newone.setPassword(hashedPassword);
+        adminrepo.save(newone);
         RedirectView Rv=new RedirectView("/Admin/listadmins");
         return Rv;
     }
@@ -89,9 +93,8 @@ public class AdminController {
     @PostMapping("/login")
     public RedirectView loginProgress(@RequestParam("username") String username, @RequestParam("password") String password,HttpSession session) {
         Admin admin = adminrepo.findByUserName(username);
-        if (admin != null && BCyrpt.checkpw(password, admin.getPassword())) {
+        if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
             session.setAttribute("UserName", username); 
-            recentLogins.add(username);
             return new RedirectView("/Admin/adminProfile");
         } else {
             return new RedirectView("/Admin/login");
