@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.models.Admin;
 import com.example.models.Rewards;
+import com.example.models.User;
 import com.example.repositories.AdminRepository;
 import com.example.repositories.RewardsRepository;
 import com.example.repositories.UserRepository;
@@ -87,12 +90,34 @@ public ModelAndView ProfileDetails(HttpSession session) {
     return mav;
 }
 
+@GetMapping("/login")
+public ModelAndView login() {
+    ModelAndView mav = new ModelAndView("/admin/adminLogin");
+    mav.addObject("admin", new Admin());
+    return mav;
+}
+
+     @PostMapping("Login")
+    public RedirectView loginProcess(@RequestParam("username") String username, 
+                                     @RequestParam("password") String password, 
+                                     HttpSession session,
+                                     RedirectAttributes redirectAttributes) {
+        Admin admin = adminrepo.findByUserName(username);
+        if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
+            session.setAttribute("username", username);
+            return new RedirectView("Admin/adminProfile");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Invalid username or password");
+            return new RedirectView("Admin/login");
+        }
+    }
+
 @GetMapping("/logout")
 public RedirectView logout(HttpSession session) {
    
     session.invalidate();
    
-    return new RedirectView("/login");
+    return new RedirectView("/Admin/login");
 }
 @GetMapping("/Rewards")
 public ModelAndView getRewardsPage() {

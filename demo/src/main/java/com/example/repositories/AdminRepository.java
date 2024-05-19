@@ -10,6 +10,6 @@ public interface  AdminRepository extends JpaRepository<Admin,Long> {
 
     Admin findByUserName(String UserName);
     
-    //List<Admin> findAll();
+    List<Admin> findAll();
 
 }
