@@ -118,7 +118,7 @@ body {
  .navbar {
     /* Set your desired background color */
     color:#000000; /* Set text color */
-    padding: 10px 20px; /* Adjust padding as needed */
+    padding: 10px 25px; /* Adjust padding as needed */
     display: flex;
     justify-content: space-between;
     align-items: center;

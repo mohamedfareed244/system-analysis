@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -288,4 +289,46 @@ public class TimerController {
     // return ResponseEntity.ok("Task deleted successfully.");
     // }
 
+        @GetMapping("/updateProfile")
+    public ModelAndView updateProfile(HttpSession session) {
+        ModelAndView mav = new ModelAndView("updateProfile");
+        String name = (String) session.getAttribute("name");
+        String username = (String) session.getAttribute("username");
+        String phonenumber = (String) session.getAttribute("phonenumber");
+        String password = (String) session.getAttribute("password");
+        
+        mav.addObject("name", name);
+        mav.addObject("username", username);
+        mav.addObject("phonenumber", phonenumber);
+        mav.addObject("password", password);
+        User user = userRepository.findByUsername(name);
+        mav.addObject("user", user);
+        return mav;
+    }
+
+    @PostMapping("/updateProfile")
+    public RedirectView updateProfile(@ModelAttribute User updatedUser,
+    @RequestParam(value = "newPassword", required = false) String newPassword, HttpSession session) {
+        String name = (String) session.getAttribute("name");
+        
+        User existingUser = userRepository.findByUsername(name);
+        if (existingUser != null) {
+            existingUser.setName(updatedUser.getName());
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setPhonenumber(updatedUser.getPhonenumber());
+            if (newPassword != null && !newPassword.isEmpty()) {
+                // Don't hash the password if you want to store it as plain text
+                existingUser.setPassword(newPassword);
+            }
+
+            userRepository.save(existingUser);
+
+            // Update session attribute if necessary
+            session.setAttribute("name", existingUser.getName());
+            session.setAttribute("username", existingUser.getUsername());
+            session.setAttribute("phonenumber", existingUser.getPhonenumber());
+        }
+
+        return new RedirectView("/user/profile");
+    }
 }
