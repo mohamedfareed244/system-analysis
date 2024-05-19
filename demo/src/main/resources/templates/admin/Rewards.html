@@ -7,15 +7,13 @@
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="/css/admin/adminSidebar.css">
-
     <link rel="icon" href="/images/logo.png" type="image/icon type" />
     <title>Rewards</title>
 </head>
 <body>
     <div th:replace="~{/admin/sidebar :: sidebar}"></div>
-  
+
     <section id="content">
-       
         <!-- MAIN -->
         <main>
             <div class="head-title">
@@ -35,17 +33,27 @@
                                 <th>ID</th>
                                 <th>Number of Task(s)</th>
                                 <th>Reward</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="reward : ${rewards}">
-                                <td th:text="${reward.Id}"></td>
+                                <td th:text="${reward.id}"></td>
+                                <td th:text="${reward.reward}"></td>
                                 <td th:text="${reward.taskCondition}"></td>
-                                <td th:text="${reward.Reward}"></td>
+                                
+                                <td>
+                                    <a th:href="@{/Admin/editReward(id=${reward.id})}">Edit</a>
+                                    <a th:href="@{/Admin/deleteReward(id=${reward.id})}">Delete</a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <div>
+                <a href="/Admin/addReward">Add Reward</a>
             </div>
         </main>
         <!-- MAIN -->
