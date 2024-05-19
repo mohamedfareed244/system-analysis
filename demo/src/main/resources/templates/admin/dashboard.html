@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	<link rel="stylesheet" href="/css/admin/adminSidebar.css">
+
+    <link rel="icon" href="/images/logo.png" type="image/icon type" />
+
+
+	<title>Dashboard</title>
+</head>
+
+<body>
+
+    <div th:replace="~{/admin/sidebar :: sidebar}"></div>
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<!-- <nav>
+			<i class='bx bx-menu'></i>
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn" title="submit"><i class='bx bx-search'></i></button>
+				</div>
+			</form>
+			 <a href="profileAdmin.html" class="profile"> profile icon
+				<img src="/static/images/profile.jpg" alt="profile">
+			</a> -->
+		<!-- </nav> --> 
+		<!-- NAVBAR -->
+		
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<!-- <ul class="breadcrumb">
+						<li>
+							<a href="index.html">Dashboard</a>
+						</li>		
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li>
+							<a class="active" href="#">Home</a>
+						</li>
+					</ul> -->
+				</div>
+			</div>
+
+			<ul class="box-info">
+				
+				<li>
+					<i class='bx bxs-group'></i>
+					<span class="text">
+						<h3><span th:text="${userCount}"></span></h3>
+						<p>Users</p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-group'></i>
+					<span class="text">
+						<h3><span th:text="${adminCount}"></span></h3>
+						<p>Admins</p>
+					</span>
+				</li>
+			</ul>
+
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Recent Logins</h3>
+						<!-- <i class='bx bx-search'></i>
+						<i class='bx bx-filter'></i> -->
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>User</th>
+								<!-- <th>Time Accomplished</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							
+							<tr th:each="login : ${recentLogins}">
+                                <td th:text="${login}"></td>
+                            </tr>
+							<!-- <tr>
+								<td>
+								
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+							</tr> -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+		<!-- MAIN -->
+	</section>
+	
+</body>
+
+</html>

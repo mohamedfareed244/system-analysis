@@ -35,6 +35,8 @@ public class AdminController {
     @Autowired
     RewardsRepository reward_repo;
 
+    private List<String> recentLogins = new ArrayList<>();
+
     @GetMapping("")
     public ModelAndView Getindex(){
            ModelAndView newmodel=new ModelAndView("/admin/adminProfile");
@@ -69,31 +71,53 @@ public class AdminController {
         return Rv;
     }
 
-@GetMapping("/adminProfile")
-public ModelAndView ProfileDetails(HttpSession session) {
-    ModelAndView mav = new ModelAndView("/admin/adminProfile");
-    String username = (String) session.getAttribute("Username");
-    if (username != null) {
+    @GetMapping("/deleteAdmin")
+    public RedirectView deleteAdmin(@RequestParam("id") Long id) {
+        adminrepo.deleteById(id);
+        return new RedirectView("/Admin/listadmins");
+    }
+    
+    @GetMapping("/login")
+    public ModelAndView login() {
+        ModelAndView mav = new ModelAndView("/admin/adminLogin");
+        mav.addObject("admin", new Admin());
+        return mav;
+    }
+
+    
+    @PostMapping("/login")
+    public RedirectView loginProgress(@RequestParam("username") String username, @RequestParam("password") String password,HttpSession session) {
         Admin admin = adminrepo.findByUserName(username);
-        if (admin!= null) {
-            mav.addObject("userId", admin.getId());
-            mav.addObject("name", admin.getName());
-            mav.addObject("phone", admin.getPhone());
-            mav.addObject("username", admin.getuserName());
-          
-           
+        if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
+            session.setAttribute("UserName", username); 
+            recentLogins.add(username);
+            return new RedirectView("/Admin/adminProfile");
+        } else {
+            return new RedirectView("/Admin/login");
         }
     }
-    return mav;
-}
 
-@GetMapping("/logout")
-public RedirectView logout(HttpSession session) {
-   
-    session.invalidate();
-   
-    return new RedirectView("/login");
-}
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/Admin/login");
+    }
+
+    @GetMapping("/adminProfile")
+    public ModelAndView ProfileDetails(HttpSession session) {
+        ModelAndView mav = new ModelAndView("/admin/adminProfile");
+        String username = (String) session.getAttribute("UserName");
+        if (username != null) {
+            Admin admin = adminrepo.findByUserName(username);
+            if (admin != null) {
+                mav.addObject("userId", admin.getId());
+                mav.addObject("name", admin.getName());
+                mav.addObject("phone", admin.getPhone());
+                mav.addObject("username", admin.getuserName());
+            }
+        }
+        return mav;
+    }
 @GetMapping("/Rewards")
 public ModelAndView getRewardsPage() {
     ModelAndView mav = new ModelAndView("/admin/Rewards");
@@ -136,7 +160,26 @@ public ModelAndView getRewardsPage() {
         reward_repo.deleteById(id);
         return new RedirectView("/Admin/Rewards");
     }
+    @GetMapping("/adminCount")
+    public int getAdminCount() {
+        return (int) adminrepo.count();
+    }
 
+    @GetMapping("/userCount")
+    public int getUserCount() {
+        return (int) user_repo.count();
+    }
+
+    @GetMapping("/dashboard")
+    public ModelAndView getDashboard() {
+    ModelAndView mav = new ModelAndView("/admin/dashboard");
+    int adminCount = (int) adminrepo.count();
+    int userCount = (int) user_repo.count();
+    mav.addObject("adminCount", adminCount);
+    mav.addObject("userCount", userCount);
+    mav.addObject("recentLogins", recentLogins);
+    return mav;
+}
 
 private double calculateDiscountPercentage(int totalFinishedTasks) {
 
