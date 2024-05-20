@@ -71,7 +71,7 @@ public class TimerController {
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
-        return "signup";
+        return "/signup";
     }
 
     @PostMapping("/signup")
@@ -103,17 +103,37 @@ public class TimerController {
         ModelAndView mav = new ModelAndView("profile.html");
         User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            mav.setViewName("redirect:/user/login");
-            return mav;
-        }
+          String name = (String) session.getAttribute("name");
+        String username = (String) session.getAttribute("username");
+        String phonenumber = (String) session.getAttribute("phonenumber");
 
-        mav.addObject("id", user.getId());
-        mav.addObject("username", user.getUsername());
         mav.addObject("name", user.getName());
+        mav.addObject("username", user.getUsername());
         mav.addObject("phonenumber", user.getPhonenumber());
 
         return mav;
+    }
+
+    @GetMapping("/{id}/edituser")
+    public String edituser(@PathVariable("id") Long id, Model model) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
+        model.addAttribute("user", user);
+        return "/user/updateProfile";
+    }
+
+    @PostMapping("/{id}/edituser")
+    public String updateuser(@Valid @PathVariable("id") Long id, @ModelAttribute("User") User updateduser,
+            BindingResult bindingResult) {
+                User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
+        user.setUsername(updateduser.getUsername());
+        if (bindingResult.hasErrors()) {
+            return "redirect:/user/updateProfile";
+        } else {
+            userRepository.save(user);
+            return "redirect:/user/Profile";
+        }
     }
 
     @GetMapping("/finished-tasks")
@@ -289,46 +309,6 @@ public class TimerController {
     // return ResponseEntity.ok("Task deleted successfully.");
     // }
 
-        @GetMapping("/updateProfile")
-    public ModelAndView updateProfile(HttpSession session) {
-        ModelAndView mav = new ModelAndView("updateProfile");
-        String name = (String) session.getAttribute("name");
-        String username = (String) session.getAttribute("username");
-        String phonenumber = (String) session.getAttribute("phonenumber");
-        String password = (String) session.getAttribute("password");
-        
-        mav.addObject("name", name);
-        mav.addObject("username", username);
-        mav.addObject("phonenumber", phonenumber);
-        mav.addObject("password", password);
-        User user = userRepository.findByUsername(name);
-        mav.addObject("user", user);
-        return mav;
-    }
-
-    @PostMapping("/updateProfile")
-    public RedirectView updateProfile(@ModelAttribute User updatedUser,
-    @RequestParam(value = "newPassword", required = false) String newPassword, HttpSession session) {
-        String name = (String) session.getAttribute("name");
-        
-        User existingUser = userRepository.findByUsername(name);
-        if (existingUser != null) {
-            existingUser.setName(updatedUser.getName());
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setPhonenumber(updatedUser.getPhonenumber());
-            if (newPassword != null && !newPassword.isEmpty()) {
-                // Don't hash the password if you want to store it as plain text
-                existingUser.setPassword(newPassword);
-            }
-
-            userRepository.save(existingUser);
-
-            // Update session attribute if necessary
-            session.setAttribute("name", existingUser.getName());
-            session.setAttribute("username", existingUser.getUsername());
-            session.setAttribute("phonenumber", existingUser.getPhonenumber());
-        }
-
-        return new RedirectView("/user/profile");
-    }
+      
+   
 }

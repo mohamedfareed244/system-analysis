@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <title>Timer Page</title>
     <link href="/css/styles.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,26 +51,23 @@
 
         .btn-block {
             font-size: 15px;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            width: 83%;
+            padding: 20px;
+            margin: 10px;
             border: none;
             border-radius: 70px;
             cursor: pointer;
             color: hsl(231, 61%, 22%);
         }
 
-        .btn-primary {
-            background-color: #ff6666;
-        }
-
         .btn-secondary {
+            font-weight: bold;
             background-color: #ffcccc;
         }
     </style>
 </head>
-
 <body>
+
     <div class="navbar">
         <div class="navbar-brand">MANDALA</div>
         <ul class="navbar-nav">
@@ -80,42 +78,22 @@
             <li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
         </ul>
     </div>
+<h1>Edit prifile</h1> 
 
-    <div class="col-md-5 border-right">
-        <div class="profile-card">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Edit Profile</h4>
-                </div>
-                <form action="/user/updateProfile" method="post">
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label class="labels" for="name">Name:</label>
-                            <input type="text" class="form-control" th:value="${user.name}" id="name" name="name">
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <label class="labels" for="username">Username:</label>
-                            <input type="text" class="form-control" th:value="${user.username}" id="username" name="username">
-                        </div>
-                        <div class="col-md-12">
-                            <label class="labels" for="phonenumber">Mobile Number:</label>
-                            <input type="text" class="form-control" th:value="${user.phonenumber}" id="phonenumber" name="phonenumber">
-                        </div>
-                        <!-- Add more fields as needed -->
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <input type="submit" class="btn btn-primary btn-block" value="Update Profile">
-                        </div>
-                        <div class="col-md-6">
-                            <a href="/user/profile" class="btn btn-secondary btn-block" style="text-decoration: none; text-align: center;">Back</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<form th:action="@{/user/{id}/edituser(id=${user.id})}" method="post" >
+    <input type="hidden" id="id" name="id" th:value="${user.id}">
+
+
+  
+    <label for="name">UserName:</label>
+    <input type="text" id="username" name="username" th:value="${user.username}" required><br>
+
+    
+
+    <label for="phonenumber"> phonenumber:</label>
+    <input type="text" id="phonenumber" name="phonenumber" th:value="${user.phonenumber}" required><br>
+
+    <button type="submit">Save</button>
+</form>
 </body>
 </html>
