@@ -84,31 +84,27 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Profile Settings</h4>
                 </div>
-                <!-- <div class="row mt-2">
+                <div class="row mt-2">
                     <div class="col-md-12">
-                        <label class="labels" for="name">Name:</label>
-                        <p th:text="${name}" class="form-control" id="name" name="name"></p>
+                        <label class="labels">Name:</label>
+                        <p th:text="${name}" class="form-control" id="name"></p>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
-                        <label class="labels" for="username">Username:</label>
-                        <p th:text="${username}" class="form-control" id="username" name="username"></p>
+                        <label class="labels">Username:</label>
+                        <p th:text="${username}" class="form-control" id="username"></p>
                     </div>
                     <div class="col-md-12">
-                        <label class="labels" for="phonenumber">Mobile Number:</label>
-                        <p th:text="${phonenumber}" class="form-control" id="phonenumber" name="name"></p>
+                        <label class="labels">Mobile Number:</label>
+                        <p th:text="${phonenumber}" class="form-control" id="phonenumber"></p>
                     </div>
                     <!-- Add more fields as needed -->
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <a href="/user/{id}/edituser"  class="btn btn-primary btn-block" style="font-weight: bold; background-color: #ff6666; text-decoration: none; display: block; text-align: center;">Update Profile</a>
-                    </div> 
-                    <form th:action="@{/user/{id}/edituser(id=${id.id})}" method="post">
-                        <input type="text" name="name" th:value="${user.name}" required title="input" class="oval-input">
-                        <button type="submit" class="form-control">Update</button>
-                    </form>
+                        <a href="/user/updateProfile"  class="btn btn-primary btn-block" style="font-weight: bold; background-color: #ff6666; text-decoration: none; display: block; text-align: center;">Update Profile</a>
+                    </div>
                     <div class="col-md-6">
                         <a href="/user/timer" class="btn btn-secondary btn-block" style="font-weight: bold; text-decoration: none; display: block; text-align: center;">Back</a>
                     </div>
