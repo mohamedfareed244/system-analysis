@@ -105,5 +105,22 @@ class TimerControllerTest {
         verify(taskRepository, times(1)).save(task);
     }
 
-    
+    @Test
+    void testUpdateTask() {
+        Task task = new Task();
+        task.setId(1L);
+        task.setDescription("Old Description");
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+
+        Task updatedTask = new Task();
+        updatedTask.setDescription("New Description");
+
+        String result = timerController.updateTask(1L, updatedTask, bindingResult);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(1)).save(task);
+        assertEquals("New Description", task.getDescription());
+    }
+
+   
+   
 }
