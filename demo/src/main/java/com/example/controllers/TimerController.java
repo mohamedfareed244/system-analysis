@@ -13,7 +13,7 @@ import com.example.repositories.TimerServiceRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-import org.springframework.http.HttpStatus;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,62 +99,58 @@ public class TimerController {
         }
     }
 
-    @GetMapping("/profile")
-    public ModelAndView viewProfile(HttpSession session) {
-        ModelAndView mav = new ModelAndView("profile.html");
-        User user = (User) session.getAttribute("user");
 
-          String name = (String) session.getAttribute("name");
-        String username = (String) session.getAttribute("username");
-        String phonenumber = (String) session.getAttribute("phonenumber");
-
-        mav.addObject("name", user.getName());
-        mav.addObject("username", user.getUsername());
-        mav.addObject("phonenumber", user.getPhonenumber());
-
+    @GetMapping("profile/{id}")
+public ModelAndView getProfile(@PathVariable("id") Long userId) {
+    ModelAndView mav = new ModelAndView("profile");
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        mav.addObject("user", user);
         return mav;
     }
+    ModelAndView errorMav = new ModelAndView("error");
+    errorMav.addObject("errorMessage", "User not found");
+    return errorMav;
+}
 
-    @GetMapping("/{id}/edituser")
-    public String edituser(@PathVariable("id") Long id, Model model) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
-        model.addAttribute("user", user);
-        return "/user/updateProfile";
+@GetMapping("edit-profile/{id}")
+public ModelAndView editProfile(@PathVariable("id") Long userId) {
+    ModelAndView mav = new ModelAndView("editProfile");
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        mav.addObject("user", user);
+        return mav;
     }
+    ModelAndView errorMav = new ModelAndView("error");
+    errorMav.addObject("errorMessage", "User not found");
+    return errorMav;
+}
 
-    @PostMapping("/{id}/edituser")
-    public String updateuser(@Valid @PathVariable("id") Long id, @ModelAttribute("User") User updateduser,
-            BindingResult bindingResult) {
-                User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
-        user.setUsername(updateduser.getUsername());
-        if (bindingResult.hasErrors()) {
-            return "redirect:/user/updateProfile";
-        } else {
-            userRepository.save(user);
-            return "redirect:/user/Profile";
+@PostMapping("edit-profile/{id}")
+public RedirectView saveProfile(@PathVariable("id") Long userId, @ModelAttribute User updatedUser, HttpSession session) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        user.setName(updatedUser.getName());
+        user.setUsername(updatedUser.getUsername());
+        user.setPhonenumber(updatedUser.getPhonenumber());
+        
+        // Update password only if a new password is provided
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            String encodedPassword = BCrypt.hashpw(updatedUser.getPassword(), BCrypt.gensalt(12));
+            user.setPassword(encodedPassword);
         }
+
+        userRepository.save(user);
+        session.setAttribute("user", user); // Update session user
+        return new RedirectView("/user/profile/" + userId);
     }
+    return new RedirectView("/user/error");
+}
 
-    // @GetMapping("/finished-tasks")
-    // public ModelAndView getFinishedTasks(HttpSession session) {
-    //     ModelAndView mav = new ModelAndView("finished-tasks.html");
-    //     User user = (User) session.getAttribute("user");
 
-    //     if (user == null) {
-    //         mav.setViewName("redirect:/user/login");
-    //         return mav;
-    //     } else {
-    //         List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
-    //         mav.addObject("finishedTasks", finishedTasks);
-    //         return mav;
-    //     }
-    // }
-
-    @GetMapping("/user-report")
-    public ModelAndView generateUserReport(HttpSession session) {
-        ModelAndView mav = new ModelAndView("user-report.html");
+    @GetMapping("/finished-tasks")
+    public ModelAndView getFinishedTasks(HttpSession session) {
+        ModelAndView mav = new ModelAndView("finished-tasks.html");
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
@@ -163,19 +159,36 @@ public class TimerController {
         } else {
             List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
             mav.addObject("finishedTasks", finishedTasks);
-
-            int totalFinishedTasks = finishedTasks.size();
-            double discountPercentage = calculateDiscountPercentage(totalFinishedTasks);
-
-            BigDecimal discountPercentageBigDecimal = BigDecimal.valueOf(discountPercentage * 100);
-
-            discountPercentageBigDecimal = discountPercentageBigDecimal.setScale(2, RoundingMode.HALF_UP);
-
-            mav.addObject("discountPercentage", discountPercentageBigDecimal);
-
             return mav;
         }
     }
+
+    @GetMapping("/user-report")
+public ModelAndView generateUserReport(HttpSession session) {
+    ModelAndView mav = new ModelAndView("user-report.html");
+    User user = (User) session.getAttribute("user");
+
+    if (user == null) {
+        mav.setViewName("redirect:/user/login");
+        return mav;
+    } else {
+        List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
+        mav.addObject("finishedTasks", finishedTasks);
+
+        int totalFinishedTasks = finishedTasks.size();
+        double discountPercentage = calculateDiscountPercentage(totalFinishedTasks);
+
+        BigDecimal discountPercentageBigDecimal = BigDecimal.valueOf(discountPercentage * 100);
+        discountPercentageBigDecimal = discountPercentageBigDecimal.setScale(2, RoundingMode.HALF_UP);
+        mav.addObject("discountPercentage", discountPercentageBigDecimal);
+
+        // Add welcome message with the user's name
+        mav.addObject("welcomeMessage", "Welcome to User Report, " + user.getName());
+
+        return mav;
+    }
+}
+
 
     private double calculateDiscountPercentage(int totalFinishedTasks) {
 
@@ -311,32 +324,41 @@ public class TimerController {
         return "redirect:/user/timer";
     }
 
-    // @PostMapping("/timer/editTask/{taskId}")
-    // public ResponseEntity<String> updateTask(@PathVariable("taskId") Long taskId,
-    // @Valid @ModelAttribute("tasks") Task updatedTask,
-    // BindingResult bindingResult) {
-    // if (bindingResult.hasErrors()) {
-    // return ResponseEntity.badRequest().body("Invalid task data.");
-    // } else {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // tasks.setDescription(updatedTask.getDescription());
-    // taskRepository.save(tasks);
-    // return ResponseEntity.ok("Task updated successfully.");
-    // }
-    // }
+    //for nav
+    @GetMapping("/timer/editTasks/{taskId}")
+    public String showEditTaskForms(@PathVariable("taskId") Long taskId, Model model) {
+        Task tasks = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+        model.addAttribute("tasks", tasks);
+        return "edit-task";
+    }
 
-    // @PostMapping("/timer/deleteTask/{taskId}")
-    // public ResponseEntity<String> deleteTask(@PathVariable("taskId") Long taskId)
-    // {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // taskRepository.delete(tasks);
-    // return ResponseEntity.ok("Task deleted successfully.");
-    // }
+    @PostMapping("/timer/editTasks/{taskId}")
+    public String updateTasks(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("tasks") Task updatedTask,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "finished-tasks";
+        } else {
+            Task tasks = taskRepository.findById(taskId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+            tasks.setDescription(updatedTask.getDescription());
+            taskRepository.save(tasks);
+            return "redirect:/user/finished-tasks";
 
-        
-    
+        }
+    }
+
+    @PostMapping("/timer/deleteTasks/{taskId}")
+    public String deleteTasks(@PathVariable("taskId") Long taskId) {
+        Task tasks = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+        taskRepository.delete(tasks);
+        return "redirect:/user/finished-tasks";
+    }
+
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/user/Home");
+    }
 }
