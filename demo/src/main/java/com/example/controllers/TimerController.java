@@ -136,20 +136,20 @@ public class TimerController {
         }
     }
 
-    // @GetMapping("/finished-tasks")
-    // public ModelAndView getFinishedTasks(HttpSession session) {
-    //     ModelAndView mav = new ModelAndView("finished-tasks.html");
-    //     User user = (User) session.getAttribute("user");
+    @GetMapping("/finished-tasks")
+    public ModelAndView getFinishedTasks(HttpSession session) {
+        ModelAndView mav = new ModelAndView("finished-tasks.html");
+        User user = (User) session.getAttribute("user");
 
-    //     if (user == null) {
-    //         mav.setViewName("redirect:/user/login");
-    //         return mav;
-    //     } else {
-    //         List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
-    //         mav.addObject("finishedTasks", finishedTasks);
-    //         return mav;
-    //     }
-    // }
+        if (user == null) {
+            mav.setViewName("redirect:/user/login");
+            return mav;
+        } else {
+            List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
+            mav.addObject("finishedTasks", finishedTasks);
+            return mav;
+        }
+    }
 
     @GetMapping("/user-report")
     public ModelAndView generateUserReport(HttpSession session) {
@@ -283,32 +283,41 @@ public class TimerController {
         return "redirect:/user/timer";
     }
 
-    // @PostMapping("/timer/editTask/{taskId}")
-    // public ResponseEntity<String> updateTask(@PathVariable("taskId") Long taskId,
-    // @Valid @ModelAttribute("tasks") Task updatedTask,
-    // BindingResult bindingResult) {
-    // if (bindingResult.hasErrors()) {
-    // return ResponseEntity.badRequest().body("Invalid task data.");
-    // } else {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // tasks.setDescription(updatedTask.getDescription());
-    // taskRepository.save(tasks);
-    // return ResponseEntity.ok("Task updated successfully.");
-    // }
-    // }
+    //for nav
+    @GetMapping("/timer/editTasks/{taskId}")
+    public String showEditTaskForms(@PathVariable("taskId") Long taskId, Model model) {
+        Task tasks = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+        model.addAttribute("tasks", tasks);
+        return "edit-task";
+    }
 
-    // @PostMapping("/timer/deleteTask/{taskId}")
-    // public ResponseEntity<String> deleteTask(@PathVariable("taskId") Long taskId)
-    // {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // taskRepository.delete(tasks);
-    // return ResponseEntity.ok("Task deleted successfully.");
-    // }
+    @PostMapping("/timer/editTasks/{taskId}")
+    public String updateTasks(@PathVariable("taskId") Long taskId, @Valid @ModelAttribute("tasks") Task updatedTask,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "finished-tasks";
+        } else {
+            Task tasks = taskRepository.findById(taskId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+            tasks.setDescription(updatedTask.getDescription());
+            taskRepository.save(tasks);
+            return "redirect:/user/finished-tasks";
 
-      
-   
+        }
+    }
+
+    @PostMapping("/timer/deleteTasks/{taskId}")
+    public String deleteTasks(@PathVariable("taskId") Long taskId) {
+        Task tasks = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
+        taskRepository.delete(tasks);
+        return "redirect:/user/finished-tasks";
+    }
+
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/user/login");
+    }
 }
