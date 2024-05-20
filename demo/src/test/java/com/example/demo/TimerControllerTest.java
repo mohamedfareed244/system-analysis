@@ -74,12 +74,25 @@ class TimerControllerTest {
     void testSignup() {
         when(userRepository.findByUsername("newUser")).thenReturn(null);
 
-        String result = timerController.signup("newUser", "newPass", "name", "1234567890", session);
+        String result = timerController.signup("newUser", "newPass", "name", "phonenumber", session);
         assertEquals("redirect:/user/timer", result);
         User user = (User) session.getAttribute("user");
         assertEquals("newUser", user.getUsername());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    
+
+    @Test
+    void testGetTimerPage() {
+        User user = new User();
+        session.setAttribute("user", user);
+        when(taskRepository.findByUser(user)).thenReturn(Collections.emptyList());
+
+        String result = timerController.getTimerPage(model, session);
+        assertEquals("timer", result);
+        verify(model, times(1)).addAttribute(eq("tasks"), anyList());
+        verify(model, times(1)).addAttribute(eq("user"), eq(user));
+    }
+
+   
 }
