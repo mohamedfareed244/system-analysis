@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+// import org.springframework.mock.web.MockHttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -362,4 +363,6 @@ public ModelAndView generateUserReport(HttpSession session) {
         session.invalidate();
         return new RedirectView("/user/Home");
     }
+
+  
 }

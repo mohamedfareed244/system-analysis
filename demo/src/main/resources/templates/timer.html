@@ -285,7 +285,11 @@ document.getElementById("update-break").addEventListener("click", function() {
             success: function(response) {
                 alert("Break duration updated successfully.");
                 breakDuration = newBreakDuration;
+                timerLabel.innerHTML = "Break";
+                clearInterval(timerInterval);
+                 setTimerMode(true);
                 setTimerDisplay(breakDuration * 60);
+
                 stopTimer();
             },
             error: function(xhr, status, error) {
