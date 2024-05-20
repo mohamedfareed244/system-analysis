@@ -95,6 +95,7 @@ public class AdminController {
         Admin admin = adminrepo.findByUserName(username);
         if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
             session.setAttribute("UserName", username); 
+            recentLogins.add(username);
             return new RedirectView("/Admin/adminProfile");
         } else {
             return new RedirectView("/Admin/login");
