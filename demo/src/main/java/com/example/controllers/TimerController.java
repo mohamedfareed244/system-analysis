@@ -265,50 +265,9 @@ public class TimerController {
 
         }
     }
-
-    @PostMapping("/timer/deleteTask/{taskId}")
-    public String deleteTask(@PathVariable("taskId") Long taskId) {
-        Task tasks = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-        taskRepository.delete(tasks);
-        return "redirect:/user/timer";
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/user/login");
     }
-
-    @PostMapping("/timer/finishTask/{taskId}")
-    public String finishTask(@PathVariable("taskId") Long taskId) {
-        Task tasks = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " + taskId));
-        tasks.setFinished(true);
-        taskRepository.save(tasks);
-        return "redirect:/user/timer";
-    }
-
-    // @PostMapping("/timer/editTask/{taskId}")
-    // public ResponseEntity<String> updateTask(@PathVariable("taskId") Long taskId,
-    // @Valid @ModelAttribute("tasks") Task updatedTask,
-    // BindingResult bindingResult) {
-    // if (bindingResult.hasErrors()) {
-    // return ResponseEntity.badRequest().body("Invalid task data.");
-    // } else {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // tasks.setDescription(updatedTask.getDescription());
-    // taskRepository.save(tasks);
-    // return ResponseEntity.ok("Task updated successfully.");
-    // }
-    // }
-
-    // @PostMapping("/timer/deleteTask/{taskId}")
-    // public ResponseEntity<String> deleteTask(@PathVariable("taskId") Long taskId)
-    // {
-    // Task tasks = taskRepository.findById(taskId)
-    // .orElseThrow(() -> new IllegalArgumentException("Invalid task ID: " +
-    // taskId));
-    // taskRepository.delete(tasks);
-    // return ResponseEntity.ok("Task deleted successfully.");
-    // }
-
-      
-   
 }
