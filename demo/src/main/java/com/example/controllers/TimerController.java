@@ -13,6 +13,7 @@ import com.example.repositories.TimerServiceRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,43 +99,54 @@ public class TimerController {
         }
     }
 
-    @GetMapping("/profile")
-    public ModelAndView viewProfile(HttpSession session) {
-        ModelAndView mav = new ModelAndView("profile.html");
-        User user = (User) session.getAttribute("user");
 
-          String name = (String) session.getAttribute("name");
-        String username = (String) session.getAttribute("username");
-        String phonenumber = (String) session.getAttribute("phonenumber");
-
-        mav.addObject("name", user.getName());
-        mav.addObject("username", user.getUsername());
-        mav.addObject("phonenumber", user.getPhonenumber());
-
+    @GetMapping("profile/{id}")
+public ModelAndView getProfile(@PathVariable("id") Long userId) {
+    ModelAndView mav = new ModelAndView("profile");
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        mav.addObject("user", user);
         return mav;
     }
+    ModelAndView errorMav = new ModelAndView("error");
+    errorMav.addObject("errorMessage", "User not found");
+    return errorMav;
+}
 
-    @GetMapping("/{id}/edituser")
-    public String edituser(@PathVariable("id") Long id, Model model) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
-        model.addAttribute("user", user);
-        return "/user/updateProfile";
+@GetMapping("edit-profile/{id}")
+public ModelAndView editProfile(@PathVariable("id") Long userId) {
+    ModelAndView mav = new ModelAndView("editProfile");
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        mav.addObject("user", user);
+        return mav;
     }
+    ModelAndView errorMav = new ModelAndView("error");
+    errorMav.addObject("errorMessage", "User not found");
+    return errorMav;
+}
 
-    @PostMapping("/{id}/edituser")
-    public String updateuser(@Valid @PathVariable("id") Long id, @ModelAttribute("User") User updateduser,
-            BindingResult bindingResult) {
-                User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
-        user.setUsername(updateduser.getUsername());
-        if (bindingResult.hasErrors()) {
-            return "redirect:/user/updateProfile";
-        } else {
-            userRepository.save(user);
-            return "redirect:/user/Profile";
+@PostMapping("edit-profile/{id}")
+public RedirectView saveProfile(@PathVariable("id") Long userId, @ModelAttribute User updatedUser, HttpSession session) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user != null) {
+        user.setName(updatedUser.getName());
+        user.setUsername(updatedUser.getUsername());
+        user.setPhonenumber(updatedUser.getPhonenumber());
+        
+        // Update password only if a new password is provided
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            String encodedPassword = BCrypt.hashpw(updatedUser.getPassword(), BCrypt.gensalt(12));
+            user.setPassword(encodedPassword);
         }
+
+        userRepository.save(user);
+        session.setAttribute("user", user); // Update session user
+        return new RedirectView("/user/profile/" + userId);
     }
+    return new RedirectView("/user/error");
+}
+
 
     @GetMapping("/finished-tasks")
     public ModelAndView getFinishedTasks(HttpSession session) {
