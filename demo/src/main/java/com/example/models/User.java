@@ -19,7 +19,26 @@ public class User  implements Serializable{
     private String name ;
     private String phonenumber;
     private String password;
+    private int focusDuration = 25; // default value
+    private int breakDuration = 5; // default value
 
+    // getters and setters for the new fields
+    public int getFocusDuration() {
+        return focusDuration;
+    }
+
+    public void setFocusDuration(int focusDuration) {
+        this.focusDuration = focusDuration;
+    }
+
+    public int getBreakDuration() {
+        return breakDuration;
+    }
+
+    public void setBreakDuration(int breakDuration) {
+        this.breakDuration = breakDuration;
+    }
+    
 
     // @OneToMany(cascade = CascadeType.ALL)
     // private List<Task> tasks;

@@ -13,6 +13,7 @@ import com.example.repositories.TimerServiceRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -66,8 +67,8 @@ public class TimerController {
             return "redirect:/user/timer";
         }
         return "redirect:/user/login";
+    
     }
-
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
         model.addAttribute("tasks", taskRepository.findAll());
@@ -187,21 +188,48 @@ public class TimerController {
         }
     }
 
+    // @GetMapping("/timer")
+    // public String getTimerPage(Model model, HttpSession session) {
+    //     User user = (User) session.getAttribute("user");
+    //     if (user == null) {
+    //         return "redirect:/user/login";
+    //     } else {
+    //         List<Task> tasks = taskRepository.findByUser(user);
+    //         model.addAttribute("tasks", tasks);
+    //         model.addAttribute("user", user);
+    //         TimerService timerService = new TimerService();
+    //         model.addAttribute("timerService", timerService);
+    //         return "timer";
+    //     }
+    // }
     @GetMapping("/timer")
     public String getTimerPage(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         } else {
-            List<Task> tasks = taskRepository.findByUser(user);
-            model.addAttribute("tasks", tasks);
+            model.addAttribute("tasks", taskRepository.findByUser(user));
             model.addAttribute("user", user);
-            TimerService timerService = new TimerService();
-            model.addAttribute("timerService", timerService);
+            model.addAttribute("focusDuration", user.getFocusDuration());
+            model.addAttribute("breakDuration", user.getBreakDuration());
             return "timer";
         }
     }
 
+    @PostMapping("/timer/updateDurations")
+    @ResponseBody
+    public ResponseEntity<String> updateDurations(@RequestParam int focusDuration, @RequestParam int breakDuration, HttpSession session) {
+        User user = (User) session.getAttribute("user"); 
+        if (user != null) {
+            user.setFocusDuration(focusDuration);
+            user.setBreakDuration(breakDuration);
+            userRepository.save(user);
+            return ResponseEntity.ok("Durations updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in.");
+        }
+    }
+    
     @PostMapping("/timer/start")
     public String startTimer(@RequestParam("focusDuration") int focusDuration,
             @RequestParam("breakDuration") int breakDuration) {
@@ -309,6 +337,6 @@ public class TimerController {
     // return ResponseEntity.ok("Task deleted successfully.");
     // }
 
-      
-   
+        
+    
 }

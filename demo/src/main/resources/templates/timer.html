@@ -38,12 +38,13 @@
         </div>
         <div>
             <h3>Focus Duration (minutes)</h3>
-            <input type="number" id="focus-duration" value="25" class="oval-input" title="input" />
+            <input type="number" id="focus-duration" value="25" th:value="${focusDuration}" class="oval-input" title="input" />
+
             <button id="update-focus" class="oval-button">Update</button>
         </div>
         <div>
             <h3>Break Duration (minutes)</h3>
-            <input type="number" id="break-duration" value="5" class="oval-input" title="input" />
+            <input type="number" id="break-duration" value="5" th:value="${breakDuration}" class="oval-input" title="input" />
             <button id="update-break" class="oval-button">Update</button>
         </div>
     </div>
@@ -250,11 +251,45 @@
     var focusButton = document.getElementById("start-focus");
     focusButton.addEventListener("click", startFocus);
 
-    var updateFocusButton = document.getElementById("update-focus");
-    updateFocusButton.addEventListener("click", updateFocusDuration);
+    document.getElementById("update-focus").addEventListener("click", function() {
+    var newFocusDuration = parseInt(document.getElementById("focus-duration").value);
+    if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
+        $.ajax({
+            url: "/user/timer/updateDurations",
+            method: "POST",
+            data: { focusDuration: newFocusDuration, breakDuration: breakDuration },
+            success: function(response) {
+                alert("Focus duration updated successfully.");
+                focusDuration = newFocusDuration;
+                setTimerDisplay(focusDuration * 60);
+                stopTimer();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating focus duration:", error);
+            }
+        });
+    }
+});
 
-    var updateBreakButton = document.getElementById("update-break");
-    updateBreakButton.addEventListener("click", updateBreakDuration);
+document.getElementById("update-break").addEventListener("click", function() {
+    var newBreakDuration = parseInt(document.getElementById("break-duration").value);
+    if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
+        $.ajax({
+            url: "/user/timer/updateDurations",
+            method: "POST",
+            data: { focusDuration: focusDuration, breakDuration: newBreakDuration },
+            success: function(response) {
+                alert("Break duration updated successfully.");
+                breakDuration = newBreakDuration;
+                setTimerDisplay(breakDuration * 60);
+                stopTimer();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating break duration:", error);
+            }
+        });
+    }
+});
 
     function saveUserDurations() {
         localStorage.setItem("userFocusDuration", focusDuration.toString());
