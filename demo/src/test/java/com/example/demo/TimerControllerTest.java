@@ -93,6 +93,17 @@ class TimerControllerTest {
         verify(model, times(1)).addAttribute(eq("tasks"), anyList());
         verify(model, times(1)).addAttribute(eq("user"), eq(user));
     }
+    @Test
+    void testAddTask() {
+        User user = new User();
+        session.setAttribute("user", user);
+        Task task = new Task();
+        task.setDescription("Test Task");
 
-   
+        String result = timerController.addTask(task, session);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(1)).save(task);
+    }
+
+    
 }
