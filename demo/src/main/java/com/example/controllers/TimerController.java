@@ -152,29 +152,31 @@ public class TimerController {
     }
 
     @GetMapping("/user-report")
-    public ModelAndView generateUserReport(HttpSession session) {
-        ModelAndView mav = new ModelAndView("user-report.html");
-        User user = (User) session.getAttribute("user");
+public ModelAndView generateUserReport(HttpSession session) {
+    ModelAndView mav = new ModelAndView("user-report.html");
+    User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            mav.setViewName("redirect:/user/login");
-            return mav;
-        } else {
-            List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
-            mav.addObject("finishedTasks", finishedTasks);
+    if (user == null) {
+        mav.setViewName("redirect:/user/login");
+        return mav;
+    } else {
+        List<Task> finishedTasks = taskRepository.findByUserAndFinishedTrue(user);
+        mav.addObject("finishedTasks", finishedTasks);
 
-            int totalFinishedTasks = finishedTasks.size();
-            double discountPercentage = calculateDiscountPercentage(totalFinishedTasks);
+        int totalFinishedTasks = finishedTasks.size();
+        double discountPercentage = calculateDiscountPercentage(totalFinishedTasks);
 
-            BigDecimal discountPercentageBigDecimal = BigDecimal.valueOf(discountPercentage * 100);
+        BigDecimal discountPercentageBigDecimal = BigDecimal.valueOf(discountPercentage * 100);
+        discountPercentageBigDecimal = discountPercentageBigDecimal.setScale(2, RoundingMode.HALF_UP);
+        mav.addObject("discountPercentage", discountPercentageBigDecimal);
 
-            discountPercentageBigDecimal = discountPercentageBigDecimal.setScale(2, RoundingMode.HALF_UP);
+        // Add welcome message with the user's name
+        mav.addObject("welcomeMessage", "Welcome to User Report, " + user.getName());
 
-            mav.addObject("discountPercentage", discountPercentageBigDecimal);
-
-            return mav;
-        }
+        return mav;
     }
+}
+
 
     private double calculateDiscountPercentage(int totalFinishedTasks) {
 
@@ -318,6 +320,6 @@ public class TimerController {
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
         session.invalidate();
-        return new RedirectView("/user/login");
+        return new RedirectView("/user/Home");
     }
 }
