@@ -14,8 +14,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByUserAndFinishedTrue(User user);
 
-    Object isFinished();
-
     // void updateTask(Long taskId, Task updatedTask);
 
     // Object getAllTasks();

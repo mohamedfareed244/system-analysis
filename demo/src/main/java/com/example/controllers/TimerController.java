@@ -245,36 +245,36 @@ public ModelAndView generateUserReport(HttpSession session) {
         }
     }
     
-    @PostMapping("/timer/start")
-    public String startTimer(@RequestParam("focusDuration") int focusDuration,
-            @RequestParam("breakDuration") int breakDuration) {
+    // @PostMapping("/timer/start")
+    // public String startTimer(@RequestParam("focusDuration") int focusDuration,
+    //         @RequestParam("breakDuration") int breakDuration) {
 
-        TimerService timerService = new TimerService();
-        timerService.startTimer(focusDuration, breakDuration);
-        return "redirect:/user/timer";
-    }
+    //     TimerService timerService = new TimerService();
+    //     timerService.startTimer(focusDuration, breakDuration);
+    //     return "redirect:/user/timer";
+    // }
 
-    @PostMapping("/timer/stop")
-    public String stopTimer() {
-        TimerService timerService = new TimerService();
-        timerService.stopTimer();
-        return "redirect:/user/timer";
-    }
+    // @PostMapping("/timer/stop")
+    // public String stopTimer() {
+    //     TimerService timerService = new TimerService();
+    //     timerService.stopTimer();
+    //     return "redirect:/user/timer";
+    // }
 
-    @PostMapping("/timer/reset")
-    public String resetTimer() {
-        TimerService timerService = new TimerService();
-        timerService.resetTimer();
-        return "redirect:/user/timer";
-    }
+    // @PostMapping("/timer/reset")
+    // public String resetTimer() {
+    //     TimerService timerService = new TimerService();
+    //     timerService.resetTimer();
+    //     return "redirect:/user/timer";
+    // }
 
-    @PostMapping("/timer/startBreak")
-    public String startBreak() {
-        TimerService timerService = new TimerService();
-        timerService.startBreak();
-        return "redirect:/user/timer";
+    // @PostMapping("/timer/startBreak")
+    // public String startBreak() {
+    //     TimerService timerService = new TimerService();
+    //     timerService.startBreak();
+    //     return "redirect:/user/timer";
 
-    }
+    // }
 
     @PostMapping("/timer/addTask")
     public String addTask(@ModelAttribute Task tasks, HttpSession session) {

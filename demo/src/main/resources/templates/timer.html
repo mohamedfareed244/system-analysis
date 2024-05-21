@@ -15,12 +15,12 @@
 <div class="navbar">
     <div class="navbar-brand">MANDALA</div>
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a th:href="@{/user/profile/{id}(id=${session.user.id})}" class="nav-link">
-            <i style="font-size:18px;" class="fa">&#xf007;</i>
-        </a>
-    </li>
-            <li class="nav-item"><a href="/user/finished-tasks" class="nav-link">Finished Tasks</a></li>
+        <li class="nav-item">
+            <a th:href="@{/user/profile/{id}(id=${session.user.id})}" class="nav-link">
+                <i style="font-size:18px;" class="fa">&#xf007;</i>
+            </a>
+        </li>
+        <li class="nav-item"><a href="/user/finished-tasks" class="nav-link">Finished Tasks</a></li>
         <li class="nav-item"><a href="/user/user-report" class="nav-link">Your-Report</a></li>
         <li class="nav-item"><a href="/user/timer" class="nav-link">Timer</a></li>
         <li class="nav-item"><a href="/user/logout" class="nav-link">Logout</a></li>
@@ -106,20 +106,14 @@
     var timerInterval;
     var timerTime = document.getElementById("timer-time");
     var timerLabel = document.getElementById("timer-label");
-    var storedTime = localStorage.getItem("timerTime");
     var isBreakTime = localStorage.getItem("isBreakTime") === 'true';
     var isTimerRunning = localStorage.getItem("isTimerRunning") === 'true';
-    
-    var sessionId = "<YOUR_SESSION_ID>";
-    localStorage.setItem("sessionId", sessionId);
 
     var defaultFocusDuration = 25;
     var defaultBreakDuration = 5;
-    var userFocusDuration = localStorage.getItem("userFocusDuration");
-    var userBreakDuration = localStorage.getItem("userBreakDuration");
 
-    var focusDuration = userFocusDuration ? parseInt(userFocusDuration) : defaultFocusDuration;
-    var breakDuration = userBreakDuration ? parseInt(userBreakDuration) : defaultBreakDuration;
+    var focusDuration = localStorage.getItem("userFocusDuration") ? parseInt(localStorage.getItem("userFocusDuration")) : defaultFocusDuration;
+    var breakDuration = localStorage.getItem("userBreakDuration") ? parseInt(localStorage.getItem("userBreakDuration")) : defaultBreakDuration;
 
     function setTimerMode(isBreakMode) {
         if (isBreakMode) {
@@ -189,115 +183,94 @@
         startTimer(focusDuration * 60);
     }
 
-    function saveUserDurations() {
-        var focusDuration = parseInt(document.getElementById("focus-duration").value);
-        var breakDuration = parseInt(document.getElementById("break-duration").value);
-        var sessionId = localStorage.getItem("sessionId");
-
-        $.ajax({
-            url: "/saveUserDurations",
-            method: "POST",
-            data: {
-                sessionId: sessionId,
-                focusDuration: focusDuration,
-                breakDuration: breakDuration
-            },
-            success: function (response) {
-                console.log("User durations saved successfully");
-            },
-            error: function (xhr, status, error) {
-                console.error("Error saving user durations:", error);
-            }
-        });
-    }
-
-    function getUserDurations() {
-        var sessionId = localStorage.getItem("sessionId");
-
-        $.ajax({
-            url: "/getUserDurations",
-            method: "GET",
-            data: {
-                sessionId: sessionId
-            },
-            success: function (response) {
-                var userDurations = JSON.parse(response);
-                var focusDuration = parseInt(userDurations.focusDuration);
-                var breakDuration = parseInt(userDurations.breakDuration);
-
-                setTimerDurations(focusDuration, breakDuration);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error getting user durations:", error);
-            }
-        });
-    }
-
-    var startButton = document.getElementById("start-timer");
-    startButton.addEventListener("click", function () {
-        var time = timerTime.innerHTML.split(":");
-        var minutes = parseInt(time[0]);
-        var seconds = parseInt(time[1]);
-        var totalSeconds = minutes * 60 + seconds;
-        startTimer(totalSeconds);
-        localStorage.setItem("timerStartTime", new Date().getTime());
+    document.getElementById("update-focus").addEventListener("click", function() {
+        var newFocusDuration = parseInt(document.getElementById("focus-duration").value);
+        if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
+            $.ajax({
+                url: "/user/timer/updateDurations",
+                method: "POST",
+                data: { focusDuration: newFocusDuration, breakDuration: breakDuration },
+                success: function(response) {
+                    alert("Focus duration updated successfully.");
+                    focusDuration = newFocusDuration;
+                    localStorage.setItem("userFocusDuration", newFocusDuration.toString());
+                    setTimerMode(false);
+                    stopTimer();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error updating focus duration:", error);
+                }
+            });
+        }
     });
 
-    var stopButton = document.getElementById("stop-timer");
-    stopButton.addEventListener("click", stopTimer);
+    document.getElementById("update-break").addEventListener("click", function() {
+        var newBreakDuration = parseInt(document.getElementById("break-duration").value);
+        if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
+            $.ajax({
+                url: "/user/timer/updateDurations",
+                method: "POST",
+                data: { focusDuration: focusDuration, breakDuration: newBreakDuration },
+                success: function(response) {
+                    alert("Break duration updated successfully.");
+                    breakDuration = newBreakDuration;
+                    localStorage.setItem("userBreakDuration", newBreakDuration.toString());
+                    setTimerMode(true);
+                    stopTimer();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error updating break duration:", error);
+                }
+            });
+        }
+    });
 
-    var resetButton = document.getElementById("reset-timer");
-    resetButton.addEventListener("click", resetTimer);
+    function initializeTimer() {
+        if (localStorage.getItem("timerTime")) {
+            var storedTime = localStorage.getItem("timerTime");
+            timerTime.innerHTML = storedTime;
+            var timeParts = storedTime.split(":");
+            var totalSeconds = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
 
-    var breakButton = document.getElementById("start-break");
-    breakButton.addEventListener("click", startBreak);
+            if (isTimerRunning) {
+                var currentTime = new Date().getTime();
+                var timerStartTime = parseInt(localStorage.getItem("timerStartTime"));
+                var elapsedTime = Math.floor((currentTime - timerStartTime) / 1000);
+                var remainingSeconds = totalSeconds - elapsedTime;
 
-    var focusButton = document.getElementById("start-focus");
-    focusButton.addEventListener("click", startFocus);
-
-    document.getElementById("update-focus").addEventListener("click", function() {
-    var newFocusDuration = parseInt(document.getElementById("focus-duration").value);
-    if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
-        $.ajax({
-            url: "/user/timer/updateDurations",
-            method: "POST",
-            data: { focusDuration: newFocusDuration, breakDuration: breakDuration },
-            success: function(response) {
-                alert("Focus duration updated successfully.");
-                focusDuration = newFocusDuration;
-                setTimerDisplay(focusDuration * 60);
-                stopTimer();
-            },
-            error: function(xhr, status, error) {
-                console.error("Error updating focus duration:", error);
+                if (remainingSeconds > 0) {
+                    startTimer(remainingSeconds);
+                } else {
+                    setTimerMode(isBreakTime);
+                }
             }
-        });
-    }
-});
+        } else {
+            setTimerMode(isBreakTime);
+        }
 
-document.getElementById("update-break").addEventListener("click", function() {
-    var newBreakDuration = parseInt(document.getElementById("break-duration").value);
-    if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
-        $.ajax({
-            url: "/user/timer/updateDurations",
-            method: "POST",
-            data: { focusDuration: focusDuration, breakDuration: newBreakDuration },
-            success: function(response) {
-                alert("Break duration updated successfully.");
-                breakDuration = newBreakDuration;
-                timerLabel.innerHTML = "Break";
-                clearInterval(timerInterval);
-                 setTimerMode(true);
-                setTimerDisplay(breakDuration * 60);
-
-                stopTimer();
-            },
-            error: function(xhr, status, error) {
-                console.error("Error updating break duration:", error);
-            }
-        });
+        // Set the timer label based on the current mode
+        if (isBreakTime) {
+            timerLabel.innerHTML = "Break";
+        } else {
+            timerLabel.innerHTML = "Focus";
+        }
     }
-});
+
+    initializeTimer();
+
+    document.getElementById("start-timer").addEventListener("click", function() {
+        var timeParts = timerTime.innerHTML.split(":");
+        var minutes = parseInt(timeParts[0]);
+        var seconds = parseInt(timeParts[1]);
+        var totalSeconds = minutes * 60 + seconds;
+        startTimer(totalSeconds);
+        localStorage.setItem("timerStartTime", new Date().getTime().toString());
+    });
+
+    document.getElementById("stop-timer").addEventListener("click", stopTimer);
+    document.getElementById("reset-timer").addEventListener("click", resetTimer);
+    document.getElementById("start-break").addEventListener("click", startBreak);
+    document.getElementById("start-focus").addEventListener("click", startFocus);
 
     function saveUserDurations() {
         localStorage.setItem("userFocusDuration", focusDuration.toString());
@@ -326,27 +299,6 @@ document.getElementById("update-break").addEventListener("click", function() {
                 stopTimer();
             }
         }
-    }
-
-    if (storedTime) {
-        var currentTime = new Date().getTime();
-        var elapsedTime = currentTime - parseInt(localStorage.getItem("timerStartTime"));
-        var remainingSeconds = Math.floor(elapsedTime / 1000);
-        var totalSeconds = isBreakTime ? breakDuration * 60 : focusDuration * 60;
-        var timeDifference = totalSeconds - remainingSeconds;
-
-        if (localStorage.getItem("isTimerRunning") === "true") {
-            if (timeDifference > 0) {
-                startTimer(timeDifference);
-            } else {
-                clearInterval(timerInterval);
-                setTimerMode(isBreakTime);
-            }
-        } else {
-            timerTime.innerHTML = localStorage.getItem("timerTime");
-        }
-    } else {
-        setTimerMode(false);
     }
 
     var finishForms = document.getElementsByClassName("finish-form");
