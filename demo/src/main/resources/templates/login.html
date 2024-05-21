@@ -53,6 +53,9 @@
         <div class="form-group">
             <button type="submit" class="btn-submit">Login</button>
         </div>
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
     </form>
 </body>
 </html>

@@ -21,8 +21,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -68,6 +72,8 @@ public class TimerController {
             session.setAttribute("user", user);
             return "redirect:/user/timer";
         }
+        // RequestAttributes.addFlashAttribute("errorMessage", "Wrong username or password. Please try again.");
+
         return "redirect:/user/login";
     
     }
