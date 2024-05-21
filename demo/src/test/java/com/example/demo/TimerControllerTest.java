@@ -121,6 +121,16 @@ class TimerControllerTest {
         assertEquals("New Description", task.getDescription());
     }
 
-   
+    @Test
+    void testDeleteTask() {
+        Task task = new Task();
+        task.setId(1L);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+
+        String result = timerController.deleteTask(1L);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(1)).delete(task);
+    }
+
    
 }
