@@ -39,4 +39,11 @@ public class AdminControllerTest {
         RedirectView rv =this.admincontroller.loginProgress("nermien@gmail.com","",session);
         assertEquals("/Admin/login", rv.getUrl());
     }
+
+    @Test
+    void testSuccessLogin(){
+        RedirectView rv =this.admincontroller.loginProgress("nermien@gmail.com","",session);
+        assertEquals("/Admin/adminProfile", rv.getUrl());
+        
+    }
 }
