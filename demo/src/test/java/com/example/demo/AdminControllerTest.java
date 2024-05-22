@@ -47,4 +47,10 @@ public class AdminControllerTest {
         assertEquals("/Admin/adminProfile", rv.getUrl());
         
     }
+
+    @Test 
+    void testAdminLogout(){
+        RedirectView rv =this.admincontroller.logout(session);
+        assertEquals("/Admin/login", rv.getUrl());
+    }
 }
