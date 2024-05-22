@@ -32,4 +32,9 @@ public class AdminControllerTest {
         ModelAndView mav =this.admincontroller.ProfileDetails(session);
         assertEquals("/admin/adminProfile", mav.getViewName());
     }
+
+    @Test
+    void testfaillogin(){
+        
+    }
 }
