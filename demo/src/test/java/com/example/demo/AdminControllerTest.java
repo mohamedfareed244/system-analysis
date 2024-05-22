@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.controllers.AdminController;
 import com.example.repositories.AdminRepository;
@@ -35,6 +36,7 @@ public class AdminControllerTest {
 
     @Test
     void testfaillogin(){
-        
+        RedirectView rv =this.admincontroller.loginProgress("nermien@gmail.com","",session);
+        assertEquals("/Admin/login", null);
     }
 }
