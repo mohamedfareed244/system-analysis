@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.controllers.TimerController;
-
 import com.example.models.Task;
 import com.example.models.User;
 import com.example.repositories.TaskRepository;
@@ -18,10 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 class TimerControllerTest {
@@ -71,6 +70,18 @@ class TimerControllerTest {
     }
 
     @Test
+    void testLoginInvalidPassword() {
+        User user = new User();
+        user.setUsername("testUser");
+        user.setPassword("wrongPass");
+        when(userRepository.findByUsername("testUser")).thenReturn(user);
+
+        String result = timerController.login("testUser", "testPass", session);
+        assertEquals("redirect:/user/login", result);
+        assertNull(session.getAttribute("user"));
+    }
+
+    @Test
     void testSignup() {
         when(userRepository.findByUsername("newUser")).thenReturn(null);
 
@@ -81,6 +92,17 @@ class TimerControllerTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    @Test
+    void testSignupExistingUser() {
+        User existingUser = new User();
+        existingUser.setUsername("existingUser");
+        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+
+        String result = timerController.signup("existingUser", "newPass", "name", "phonenumber", session);
+        assertEquals("redirect:/user/signup", result);
+        assertEquals(existingUser, session.getAttribute("user"));
+        verify(userRepository, times(0)).save(any(User.class));
+    }
 
     @Test
     void testGetTimerPage() {
@@ -93,6 +115,13 @@ class TimerControllerTest {
         verify(model, times(1)).addAttribute(eq("tasks"), anyList());
         verify(model, times(1)).addAttribute(eq("user"), eq(user));
     }
+
+    @Test
+    void testGetTimerPageNoUserInSession() {
+        String result = timerController.getTimerPage(model, session);
+        assertEquals("redirect:/user/login", result);
+    }
+
     @Test
     void testAddTask() {
         User user = new User();
@@ -103,6 +132,16 @@ class TimerControllerTest {
         String result = timerController.addTask(task, session);
         assertEquals("redirect:/user/timer", result);
         verify(taskRepository, times(1)).save(task);
+    }
+
+    @Test
+    void testAddTaskNoUserInSession() {
+        Task task = new Task();
+        task.setDescription("Test Task");
+
+        String result = timerController.addTask(task, session);
+        assertEquals("redirect:/user/login", result);
+        verify(taskRepository, times(0)).save(task);
     }
 
     @Test
@@ -122,6 +161,33 @@ class TimerControllerTest {
     }
 
     @Test
+    void testUpdateTaskNotFound() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Task updatedTask = new Task();
+        updatedTask.setDescription("New Description");
+
+        String result = timerController.updateTask(1L, updatedTask, bindingResult);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(0)).save(any(Task.class));
+    }
+
+    @Test
+    void testUpdateTaskWithErrors() {
+        Task task = new Task();
+        task.setId(1L);
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
+        when(bindingResult.hasErrors()).thenReturn(true);
+
+        Task updatedTask = new Task();
+        updatedTask.setDescription("New Description");
+
+        String result = timerController.updateTask(1L, updatedTask, bindingResult);
+        assertEquals("edit-task", result);
+        verify(taskRepository, times(0)).save(any(Task.class));
+    }
+
+    @Test
     void testDeleteTask() {
         Task task = new Task();
         task.setId(1L);
@@ -130,6 +196,15 @@ class TimerControllerTest {
         String result = timerController.deleteTask(1L);
         assertEquals("redirect:/user/timer", result);
         verify(taskRepository, times(1)).delete(task);
+    }
+
+    @Test
+    void testDeleteTaskNotFound() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        String result = timerController.deleteTask(1L);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(0)).delete(any(Task.class));
     }
 
     @Test
@@ -144,5 +219,13 @@ class TimerControllerTest {
         verify(taskRepository, times(1)).save(task);
         assertEquals(true, task.getFinished());
     }
-   
+
+    @Test
+    void testFinishTaskNotFound() {
+        when(taskRepository.findById(1L)).thenReturn(Optional.empty());
+
+        String result = timerController.finishTask(1L);
+        assertEquals("redirect:/user/timer", result);
+        verify(taskRepository, times(0)).save(any(Task.class));
+    }
 }
