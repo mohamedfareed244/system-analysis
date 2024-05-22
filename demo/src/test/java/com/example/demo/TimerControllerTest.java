@@ -64,7 +64,7 @@ class TimerControllerTest {
         user.setPassword("testPass");
         when(userRepository.findByUsername("testUser")).thenReturn(user);
 
-        String result = timerController.login("testUser", "testPass", session);
+        String result = timerController.login("testUser", "testPass", session, null);
         assertEquals("redirect:/user/timer", result);
         assertEquals(user, session.getAttribute("user"));
     }
@@ -76,7 +76,7 @@ class TimerControllerTest {
         user.setPassword("wrongPass");
         when(userRepository.findByUsername("testUser")).thenReturn(user);
 
-        String result = timerController.login("testUser", "testPass", session);
+        String result = timerController.login("testUser", "testPass", session, null);
         assertEquals("redirect:/user/login", result);
         assertNull(session.getAttribute("user"));
     }
@@ -85,7 +85,7 @@ class TimerControllerTest {
     void testSignup() {
         when(userRepository.findByUsername("newUser")).thenReturn(null);
 
-        String result = timerController.signup("newUser", "newPass", "name", "phonenumber", session);
+        String result = timerController.signup("newUser", "newPass", "name", "phonenumber", session, null);
         assertEquals("redirect:/user/timer", result);
         User user = (User) session.getAttribute("user");
         assertEquals("newUser", user.getUsername());
@@ -98,7 +98,7 @@ class TimerControllerTest {
         existingUser.setUsername("existingUser");
         when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
 
-        String result = timerController.signup("existingUser", "newPass", "name", "phonenumber", session);
+        String result = timerController.signup("existingUser", "newPass", "name", "phonenumber", session, null);
         assertEquals("redirect:/user/signup", result);
         assertEquals(existingUser, session.getAttribute("user"));
         verify(userRepository, times(0)).save(any(User.class));

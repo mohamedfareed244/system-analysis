@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -66,16 +64,14 @@ public class TimerController {
     // return "redirect:/";
     // }
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpSession session) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
             session.setAttribute("user", user);
             return "redirect:/user/timer";
         }
-        // RequestAttributes.addFlashAttribute("errorMessage", "Wrong username or password. Please try again.");
-
+        redirectAttributes.addFlashAttribute("errorMessage", "Invalid username or password.");
         return "redirect:/user/login";
-    
     }
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -85,24 +81,22 @@ public class TimerController {
 
     @PostMapping("/signup")
     public String signup(@RequestParam String username, @RequestParam String password, @RequestParam String name,
-            @RequestParam String phonenumber, HttpSession session) {
+            @RequestParam String phonenumber, HttpSession session, RedirectAttributes redirectAttributes) {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
-            session.setAttribute("user", existingUser);
+            redirectAttributes.addFlashAttribute("errorMessage", "Email already taken.");
             return "redirect:/user/signup";
-        }
-
-        else {
+        } else {
             User user = new User();
             user.setUsername(username);
-            user.setPassword(password);
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
             user.setName(name);
             user.setPhonenumber(phonenumber);
-
+    
             userRepository.save(user);
-
+    
             session.setAttribute("user", user);
-
+    
             return "redirect:/user/timer";
         }
     }

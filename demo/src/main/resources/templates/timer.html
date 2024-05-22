@@ -43,6 +43,7 @@
         <div>
             <h3>Focus Duration (minutes)</h3>
             <input type="number" id="focus-duration" value="25" th:value="${focusDuration}" class="oval-input" title="input" />
+            <span id="error"></span>
 
             <button id="update-focus" class="oval-button">Update</button>
         </div>
@@ -103,6 +104,26 @@
 </div>
 
 <script>
+
+
+const input = document.getElementById("focus-duration");
+const error = document.getElementById('error');
+const regex = /[\\\/:*?"<>|]+/;
+
+input.addEventListener('input', (e) => {
+  const value = e.target.value;
+
+  if (regex.test(value)) {
+    input.value = value.slice(0, value.length - 1);
+    error.textContent = 'please enter a valid input: \/:*?"<>|';
+  } else {
+    error.textContent = '';
+  }
+});
+
+
+
+
     var timerInterval;
     var timerTime = document.getElementById("timer-time");
     var timerLabel = document.getElementById("timer-label");
@@ -184,77 +205,73 @@
     }
 
     document.getElementById("update-focus").addEventListener("click", function() {
-        var newFocusDuration = parseInt(document.getElementById("focus-duration").value);
-        if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
-            $.ajax({
-                url: "/user/timer/updateDurations",
-                method: "POST",
-                data: { focusDuration: newFocusDuration, breakDuration: breakDuration },
-                success: function(response) {
-                    alert("Focus duration updated successfully.");
-                    focusDuration = newFocusDuration;
-                    localStorage.setItem("userFocusDuration", newFocusDuration.toString());
-                    setTimerMode(false);
-                    stopTimer();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error updating focus duration:", error);
-                }
-            });
-        }
-    });
+    var newFocusDuration = parseInt(document.getElementById("focus-duration").value);
+    if (!isNaN(newFocusDuration) && newFocusDuration > 0) {
+        $.ajax({
+            url: "/user/timer/updateDurations",
+            method: "POST",
+            data: { focusDuration: newFocusDuration, breakDuration: breakDuration },
+            success: function(response) {
+                alert("Focus duration updated successfully.");
+                focusDuration = newFocusDuration;
+                localStorage.setItem("userFocusDuration", newFocusDuration.toString());
+                setTimerMode(false);
+                stopTimer();
+            },
+            error: function(xhr, status, error) {
+                alert("Error updating focus duration.");
+            }
+        });
+    }
+});
 
-    document.getElementById("update-break").addEventListener("click", function() {
-        var newBreakDuration = parseInt(document.getElementById("break-duration").value);
-        if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
-            $.ajax({
-                url: "/user/timer/updateDurations",
-                method: "POST",
-                data: { focusDuration: focusDuration, breakDuration: newBreakDuration },
-                success: function(response) {
-                    alert("Break duration updated successfully.");
-                    breakDuration = newBreakDuration;
-                    localStorage.setItem("userBreakDuration", newBreakDuration.toString());
-                    setTimerMode(true);
-                    stopTimer();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error updating break duration:", error);
-                }
-            });
-        }
-    });
+document.getElementById("update-break").addEventListener("click", function() {
+    var newBreakDuration = parseInt(document.getElementById("break-duration").value);
+    if (!isNaN(newBreakDuration) && newBreakDuration > 0) {
+        $.ajax({
+            url: "/user/timer/updateDurations",
+            method: "POST",
+            data: { focusDuration: focusDuration, breakDuration: newBreakDuration },
+            success: function(response) {
+                alert("Break duration updated successfully.");
+                breakDuration = newBreakDuration;
+                localStorage.setItem("userBreakDuration", newBreakDuration.toString());
+                setTimerMode(true);
+                stopTimer();
+            },
+            error: function(xhr, status, error) {
+                alert("Error updating break duration.");
+            }
+        });
+    }
+});
+
 
     function initializeTimer() {
-        if (localStorage.getItem("timerTime")) {
-            var storedTime = localStorage.getItem("timerTime");
-            timerTime.innerHTML = storedTime;
-            var timeParts = storedTime.split(":");
-            var totalSeconds = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
+    var storedTime = localStorage.getItem("timerTime");
+    if (storedTime) {
+        timerTime.innerHTML = storedTime;
+        var timeParts = storedTime.split(":");
+        var totalSeconds = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
 
-            if (isTimerRunning) {
-                var currentTime = new Date().getTime();
-                var timerStartTime = parseInt(localStorage.getItem("timerStartTime"));
-                var elapsedTime = Math.floor((currentTime - timerStartTime) / 1000);
-                var remainingSeconds = totalSeconds - elapsedTime;
+        if (isTimerRunning) {
+            var currentTime = new Date().getTime();
+            var timerStartTime = parseInt(localStorage.getItem("timerStartTime"));
+            var elapsedTime = Math.floor((currentTime - timerStartTime) / 1000);
+            var remainingSeconds = totalSeconds - elapsedTime;
 
-                if (remainingSeconds > 0) {
-                    startTimer(remainingSeconds);
-                } else {
-                    setTimerMode(isBreakTime);
-                }
+            if (remainingSeconds > 0) {
+                startTimer(remainingSeconds);
+            } else {
+                setTimerMode(isBreakTime);
             }
-        } else {
-            setTimerMode(isBreakTime);
         }
-
-        // Set the timer label based on the current mode
-        if (isBreakTime) {
-            timerLabel.innerHTML = "Break";
-        } else {
-            timerLabel.innerHTML = "Focus";
-        }
+    } else {
+        setTimerMode(isBreakTime);
     }
+
+    timerLabel.innerHTML = isBreakTime ? "Break" : "Focus";
+}
 
     initializeTimer();
 
